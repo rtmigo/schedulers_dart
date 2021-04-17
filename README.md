@@ -56,7 +56,7 @@ scheduler.run(()=>pushUpdate('777')); // maybe we will push this
 And one second later the `scheduler` runs `pushUpdate('777')`. Other tasks 
 are ignored.
 
-We can continue using the same scheduler:
+We can continue with the same scheduler:
 
 ``` dart
 scheduler.run(()=>pushUpdate('13')); // we pushed 777, now we maybe push 13
