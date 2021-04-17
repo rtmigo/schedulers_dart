@@ -8,7 +8,6 @@ import 'package:collection/collection.dart';
 import 'package:pedantic/pedantic.dart';
 
 import '20_base.dart';
-import '50_interval.dart';
 
 /// Launches callbacks asynchronously, guided by the rule "no more than N tasks in a certain
 /// period of time".
