@@ -34,6 +34,9 @@ jobs:
         run: flutter pub get
       - name: Run tests
         run: flutter test
+      - name: Run tests Web
+        run: flutter test --platform chrome
+
 
   analyze:
     runs-on: ubuntu-latest
