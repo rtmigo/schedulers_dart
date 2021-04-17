@@ -44,11 +44,11 @@ scheduler.run(()=>downloadPage('pageA'));
 scheduler.run(()=>downloadPage('pageB'));
 scheduler.run(()=>downloadPage('pageC'));
 
-// the following tasks are executed one seconds later
+// the following tasks are executed one second later
 scheduler.run(()=>downloadPage('pageD'));
 scheduler.run(()=>downloadPage('pageE'));
 scheduler.run(()=>downloadPage('pageF'));
-
+ 
 // the following tasks are executed two seconds later
 scheduler.run(()=>downloadPage('pageG'));
 scheduler.run(()=>downloadPage('pageH'));
