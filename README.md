@@ -15,23 +15,6 @@ scheduler.run(()=>downloadPage('pageB')); // will start one second later
 scheduler.run(()=>downloadPage('pageC')); // will start two seconds later
 ```
 
-# LazyScheduler
-
-Runs only the last added task and only if no new tasks have been added during 
-the time interval.
-
-``` dart
-final scheduler = LazyScheduler(latency: Duration(seconds: 1));
-
-scheduler.run(()=>pushUpdate('1')); // maybe we will push 1
-scheduler.run(()=>pushUpdate('1+1')); // no we will push 1+1
-scheduler.run(()=>pushUpdate('1+1-1')); // no we will push 1+1-1
-scheduler.run(()=>pushUpdate('1')); // it's good we so lazy
-scheduler.run(()=>pushUpdate('777')); // maybe we will push this
-```
-
-And one second later the `scheduler` runs `pushUpdate('777')`.
-
 # RateScheduler
 
 Runs no more than N tasks in a certain period of time.
@@ -53,6 +36,15 @@ scheduler.run(()=>downloadPage('pageF'));
 scheduler.run(()=>downloadPage('pageG'));
 scheduler.run(()=>downloadPage('pageH'));
 scheduler.run(()=>downloadPage('pageI'));
+```
+
+# LazyScheduler
+
+Runs only the last added task and only if no new tasks have been added during 
+the time interval.
+
+``` dart
+final scheduler = LazyScheduler(latency: Duration(seconds: 1));
 
 scheduler.run(()=>pushUpdate('1')); // maybe we will push 1
 scheduler.run(()=>pushUpdate('1+1')); // no we will push 1+1
@@ -60,3 +52,14 @@ scheduler.run(()=>pushUpdate('1+1-1')); // no we will push 1+1-1
 scheduler.run(()=>pushUpdate('1')); // it's good we so lazy
 scheduler.run(()=>pushUpdate('777')); // maybe we will push this
 ```
+
+And one second later the `scheduler` runs `pushUpdate('777')`. Other tasks 
+are ignored.
+
+We can reuse the same scheduler
+
+``` dart
+scheduler.run(()=>pushUpdate('13')); // we pushed 777, now we maybe push 13
+scheduler.run(()=>pushUpdate('10')); // no, we will no push 13...
+```
+
