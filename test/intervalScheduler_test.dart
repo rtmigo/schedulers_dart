@@ -14,7 +14,7 @@ void main()
 	{
 		for (var i=0; i<10; ++i)
 		{
-			var stq = IntervalScheduler();
+			var stq = IntervalScheduler(delay: Duration(milliseconds: 1000%30));
 
 			String txt = '';
 
