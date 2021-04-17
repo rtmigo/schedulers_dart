@@ -3,9 +3,9 @@
 Objects in this library run callbacks asynchronously, allowing useful pauses 
 between calls. This can be used for load balancing, rate limiting, lazy execution.
 
-For clarity, in the examples below, objects receive tasks immediately after 
-constructors. In fact, objects are ready to handle calls to the run method 
-at random times. The scheduler will figure out when to run them.
+In the examples below, objects receive tasks immediately after 
+constructors. But in fact, objects can handle calls to the `run` method 
+at random times. The rules of separation of tasks in time will act in the same way.
 
 # IntervalScheduler
 
