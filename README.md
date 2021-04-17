@@ -3,6 +3,9 @@
 Objects in this library run callbacks asynchronously, allowing useful pauses 
 between calls. This can be used for load balancing, rate limiting, lazy execution.
 
+Tasks do not need to be added synchronously. They can be added with any delays 
+at any time. The scheduler will figure out when to run them.
+
 # IntervalScheduler
 
 Runs tasks asynchronously, maintaining a fixed time interval between starts.
@@ -62,4 +65,5 @@ We can continue with the same scheduler:
 scheduler.run(()=>pushUpdate('13')); // we pushed 777, now we maybe push 13
 scheduler.run(()=>pushUpdate('10')); // no, we will not push 13...
 ```
+
 
