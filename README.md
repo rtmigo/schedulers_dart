@@ -60,6 +60,6 @@ We can continue with the same scheduler:
 
 ``` dart
 scheduler.run(()=>pushUpdate('13')); // we pushed 777, now we maybe push 13
-scheduler.run(()=>pushUpdate('10')); // no, we will no push 13...
+scheduler.run(()=>pushUpdate('10')); // no, we will not push 13...
 ```
 
