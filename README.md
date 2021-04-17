@@ -5,7 +5,7 @@ between calls. This can be used for load balancing, rate limiting, lazy executio
 
 In the examples below, objects receive tasks immediately after 
 constructors. But in fact, objects can handle calls to the `run` method 
-at random times. The rules of separation of tasks in time will act in the same way.
+at random times. The tasks will be distributed in time in the same way.
 
 # IntervalScheduler
 
