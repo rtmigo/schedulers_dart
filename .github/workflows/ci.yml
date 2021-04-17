@@ -26,30 +26,24 @@ jobs:
         os: [ubuntu-latest, windows-latest] # , macos-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: subosito/flutter-action@v1
-        with:
-          #flutter-version: '2.0.3'
-          channel: 'stable'
+      - uses: dart-lang/setup-dart@v1
       - name: Install dependencies
-        run: flutter pub get
+        run: dart pub get
       - name: Run tests
-        run: flutter test
+        run: dart test
       - name: Run tests Web
-        run: flutter test --platform chrome
+        run: dart test --platform chrome
 
 
   analyze:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: subosito/flutter-action@v1
-        with:
-          #flutter-version: '2.0.3'
-          channel: 'stable'
+      - uses: dart-lang/setup-dart@v1
       - name: Install dependencies
-        run: flutter pub get
+        run: dart pub get
       - name: Analyze
-        run: flutter analyze --fatal-infos
+        run: dart analyze --fatal-infos
       #- name: Publish (dry run)
       #  run: flutter pub publish --dry-run
 
