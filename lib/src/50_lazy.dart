@@ -4,8 +4,7 @@
 import 'package:schedulers/src/10_unlimited.dart';
 import 'package:schedulers/src/20_base.dart';
 
-/// Performs tasks not immediately, but with a delay. If new tasks are added during this delay,
-/// all old tasks are canceled.
+/// Runs only the last added task and only if no new tasks have been added during the time interval.
 ///
 /// That is, if you add many tasks within a short period of time, then only one of them will be
 /// executed: the last one added.
