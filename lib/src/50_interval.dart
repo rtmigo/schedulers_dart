@@ -2,11 +2,10 @@
 // SPDX-License-Identifier: MIT
 
 import 'dart:async';
+
 import 'package:collection/collection.dart';
 
 import '20_base.dart';
-
-
 
 /// Runs tasks asynchronously, maintaining a fixed time interval between starts.
 ///
@@ -15,7 +14,6 @@ import '20_base.dart';
 /// each, redrawing frames between them, than to run the tasks all at once, freezing the interface
 /// for a second.
 class IntervalScheduler implements PriorityScheduler {
-
   IntervalScheduler({this.delay = const Duration(seconds: 1)});
 
   final PriorityQueue<Task> _tasks = HeapPriorityQueue<Task>();
@@ -76,26 +74,3 @@ class IntervalScheduler implements PriorityScheduler {
     }
   }
 }
-
-//
-// /// For some reason in GitHub actions when I just [await Future.delayed(xxx)], it takes
-// /// a little less time, than xxx. This function fixes the problem. It may take a little more time,
-// /// but not less
-// Future<void> pauseAtLeast(Duration d) async {
-//   if (d.isNegative) {
-//     return;
-//   }
-//
-//   Stopwatch timeTaken = Stopwatch()..start();
-//
-//   while (true) {
-//     final delay = d - timeTaken.elapsed;
-//     if (delay <= const Duration(microseconds: 0)) {
-//       return;
-//     }
-//
-//     await Future.delayed(d);
-//   }
-// }
-//
-//
