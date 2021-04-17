@@ -32,6 +32,7 @@ void main()
 
 			await stq.completed;
 
+			
 			expect(txt, 'ABXYZ...');
 		}
 	});
