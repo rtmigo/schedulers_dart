@@ -4,9 +4,9 @@
 A library for running asynchronous functions on time. This can be used for 
 load balancing, rate limiting, lazy execution.
 
-*In the examples below, objects receive tasks immediately after 
-constructors. But in fact, the `run` method can be run at random times. The 
-tasks will be distributed in time in the same way.*
+*In the examples below, all the `run(callback)` calls are performed right 
+after object creation. But it fact all the schedulers are ready to handle 
+`run` calls at random moments.*
 
 # IntervalScheduler
 
