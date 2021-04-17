@@ -29,6 +29,8 @@ class RateScheduler implements PriorityScheduler {
 
   final Queue<Stopwatch> _recentTimes = Queue<Stopwatch>();
 
+  /// Notifies the scheduler that it should run the callback sometime. The actual call will occur
+  /// asynchronously at the time selected by the scheduler.
   @override
   Task<T> run<T>(GetterFunc<T> callback, [int priority = 0]) {
     Task<T>? result;

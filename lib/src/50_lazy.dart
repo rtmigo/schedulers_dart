@@ -20,6 +20,8 @@ class LazyScheduler {
 
   Unlimited _newestRunId = Unlimited();
 
+  /// Notifies the scheduler that it should run the callback sometime. The actual call will occur
+  /// asynchronously at the time selected by the scheduler.
   void run(GetterFunc<void> callback) async {
     this._callback = callback;
 

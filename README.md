@@ -1,12 +1,12 @@
 
 # schedulers
 
-Objects in this library run callbacks asynchronously, allowing useful pauses 
-between calls. This can be used for load balancing, rate limiting, lazy execution.
+Dart library for running asynchronous functions on time. Useful for 
+load balancing, rate limiting, lazy execution.
 
-In the examples below, objects receive tasks immediately after 
-constructors. But in fact, objects can handle calls to the `run` method 
-at random times. The tasks will be distributed in time in the same way.
+*In the examples below, all the `run(callback)` calls are performed right 
+after object creation. But it fact all the schedulers are ready to handle 
+`run` calls at random moments.*
 
 # IntervalScheduler
 
