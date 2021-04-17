@@ -1,7 +1,7 @@
 
 # schedulers
 
-A library for running asynchronous functions on time. This can be used for 
+Dart library for running asynchronous functions on time. Useful for 
 load balancing, rate limiting, lazy execution.
 
 *In the examples below, all the `run(callback)` calls are performed right 

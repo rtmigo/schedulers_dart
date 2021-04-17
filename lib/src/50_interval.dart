@@ -31,6 +31,8 @@ class IntervalScheduler implements PriorityScheduler {
 
   Future<void> get completed => this._completer.future;
 
+  /// Notifies the scheduler that it should run the callback sometime. The actual call will occur
+  /// asynchronously at the time selected by the scheduler.
   @override
   Task<T> run<T>(GetterFunc<T> callback, [int priority = 0]) {
     if (this._tasks.length <= 0) {
