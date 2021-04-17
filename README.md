@@ -10,9 +10,9 @@ Runs tasks asynchronously, maintaining a fixed time interval between starts.
 ``` dart
 final scheduler = IntervalScheduler(delay: Duration(seconds: 1));
 
-scheduler.run(()=>downloadPage('page1')); // downloads immediately
-scheduler.run(()=>downloadPage('page2')); // downloads one second later
-scheduler.run(()=>downloadPage('page3')); // downloads two seconds later
+scheduler.run(()=>downloadPage('pageA')); // starts download immediately
+scheduler.run(()=>downloadPage('pageB')); // will start one second later
+scheduler.run(()=>downloadPage('pageC')); // will start two seconds later
 ```
 
 # LazyScheduler
