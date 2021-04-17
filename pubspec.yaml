@@ -1,0 +1,15 @@
+name: schedulers
+publish_to: none
+description: Local module.
+
+version: 0.0.0+0
+
+environment:
+  sdk: ">=2.12.0 <3.0.0"
+
+dependencies:
+  meta: ^1.3.0
+
+dev_dependencies:
+  pedantic: ^1.9.0
+  test: ^1.5.1
