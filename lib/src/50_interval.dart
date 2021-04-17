@@ -16,7 +16,7 @@ import '20_base.dart';
 /// for a second.
 class IntervalScheduler implements PriorityScheduler {
 
-  IntervalScheduler({this.delay = const Duration(milliseconds: 1000 ~/ 30)});
+  IntervalScheduler({this.delay = const Duration(seconds: 1)});
 
   final PriorityQueue<Task> _tasks = HeapPriorityQueue<Task>();
   final Duration delay;

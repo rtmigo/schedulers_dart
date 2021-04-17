@@ -9,15 +9,14 @@ import 'package:pedantic/pedantic.dart';
 
 import '20_base.dart';
 
-/// Launches callbacks asynchronously, guided by the rule "no more than N tasks in a certain
-/// period of time".
+/// Runs no more than N tasks in a certain period of time.
 ///
 /// For example, no more than three tasks per second. The first three will be executed
 /// immediately, and the rest will wait, then the next three will be executed - and so on.
 ///
 /// The object is useful, for example, for accessing an API with a limit of "no more than 5
 /// requests per minute".
-class RateLimitingScheduler implements PriorityScheduler {
+class RateScheduler implements PriorityScheduler {
   final HeapPriorityQueue<Task> _queue = HeapPriorityQueue<Task>();
 
   @override
@@ -26,7 +25,7 @@ class RateLimitingScheduler implements PriorityScheduler {
   final int n;
   final Duration per;
 
-  RateLimitingScheduler(this.n, this.per);
+  RateScheduler(this.n, this.per);
 
   final Queue<Stopwatch> _recentTimes = Queue<Stopwatch>();
 

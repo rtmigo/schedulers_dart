@@ -14,8 +14,8 @@ class LazyScheduler {
   GetterFunc<void>? _callback;
   late Duration latency;
 
-  LazyScheduler({Duration? latency, this.callEach}) {
-    this.latency = latency ?? const Duration(milliseconds: 1000);
+  LazyScheduler({this.latency = const Duration(seconds: 1000), this.callEach}) {
+    //this.latency = latency ?? const Duration(seconds: 1000);
   }
 
   Unlimited _newestRunId = Unlimited();

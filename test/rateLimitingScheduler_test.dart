@@ -7,7 +7,7 @@ import 'package:test/test.dart';
 void main() {
   test('RateLimitingScheduler Limiting', () async {
     const F = 2;
-    var scheduler = RateLimitingScheduler(3, const Duration(milliseconds: 100 * F));
+    var scheduler = RateScheduler(3, const Duration(milliseconds: 100 * F));
 
     int a = 0;
 
@@ -37,7 +37,7 @@ void main() {
 
   test('RateLimitingScheduler Different Tasks', () async {
     const F = 1;
-    var scheduler = RateLimitingScheduler(5, Duration(milliseconds: 100 * F));
+    var scheduler = RateScheduler(5, Duration(milliseconds: 100 * F));
 
     int a = 0;
     int b = 0;
@@ -80,7 +80,7 @@ void main() {
   });
 
   test('RateLimitingScheduler Future', () async {
-    var scheduler = RateLimitingScheduler(5, Duration(milliseconds: 100));
+    var scheduler = RateScheduler(5, Duration(milliseconds: 100));
 
     int a = 0;
     int funcOk() {
