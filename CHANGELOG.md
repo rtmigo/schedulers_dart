@@ -1,3 +1,3 @@
-# 0.0.0
+# 0.1.0+0-alpha
 
-- Nothing new under the moon
+- Initial release
