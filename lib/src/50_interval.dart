@@ -16,7 +16,7 @@ import '20_base.dart';
 class IntervalScheduler implements PriorityScheduler {
   IntervalScheduler({this.delay = const Duration(seconds: 1)});
 
-  final PriorityQueue<Task> _tasks = HeapPriorityQueue<Task>();
+  final PriorityQueue<PriorityTask> _tasks = HeapPriorityQueue<PriorityTask>();
   final Duration delay;
   bool _scheduled = false;
 
@@ -32,12 +32,16 @@ class IntervalScheduler implements PriorityScheduler {
   /// Notifies the scheduler that it should run the callback sometime. The actual call will occur
   /// asynchronously at the time selected by the scheduler.
   @override
-  Task<T> run<T>(GetterFunc<T> callback, [int priority = 0]) {
+  PriorityTask<T> run<T>(GetterFunc<T> callback, [int priority = 0]) {
     if (this._tasks.length <= 0) {
       this._completer = Completer();
     }
 
-    var t = Task(callback, priority);
+    var t = PriorityTask(callback, priority, onCancel: (tsk) {
+      if (!this._tasks.remove(tsk)) {
+        throw ArgumentError('Task not found.');
+      }
+    });
 
     _tasks.add(t);
     this._runRunnerLater();
@@ -45,17 +49,12 @@ class IntervalScheduler implements PriorityScheduler {
     return t;
   }
 
-  @override
-  void cancel(Task t) {
-    if (!this._tasks.remove(t)) {
-      throw ArgumentError('Task not found.');
-    }
-  }
+
 
   void _runner() {
     this._scheduled = false;
     try {
-      _tasks.removeFirst().callback();
+      _tasks.removeFirst().runIfNotCanceled();
     } finally {
       if (this._tasks.length <= 0) {
         this._completer.complete();

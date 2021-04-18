@@ -2,17 +2,50 @@
 // SPDX-License-Identifier: MIT
 
 import 'dart:async';
+import 'package:meta/meta.dart';
+
 import '10_unlimited.dart';
 
+typedef CancelFunc<T> = void Function(Task<T>);
+typedef GetterFunc<T> = T Function();
 
-class BaseTask implements Comparable
-{
+
+class Task<T> {
+  Task(this._callback, {this.onCancel});
+
+  final GetterFunc<T> _callback;
+  final CancelFunc? onCancel;
+
+  @internal
+  void runIfNotCanceled() {
+    if (!this._canceled) {
+      try {
+        this._completer.complete(this._callback());
+      }
+      catch (e, stacktrace) {
+        this._completer.completeError(e, stacktrace);
+      }
+    }
+  }
+
+  final Completer<T> _completer = Completer<T>();
+
+  Future<T> get result => this._completer.future;
+
+  void cancel() {
+    this._canceled = true;
+    this.onCancel?.call(this);
+  }
+  bool _canceled = false;
+}
+
+class PriorityTask<T> extends Task<T> implements Comparable {
   static Unlimited _idgen = Unlimited();
 
-  BaseTask(this.priority);
+  PriorityTask(GetterFunc<T> callback, this.priority, {onCancel}): super(callback, onCancel: onCancel);
 
   final int priority;
-  final id = (BaseTask._idgen=BaseTask._idgen.next());
+  final id = (PriorityTask._idgen=PriorityTask._idgen.next());
 
   @override
   int compareTo(other)
@@ -29,23 +62,7 @@ class BaseTask implements Comparable
   }
 }
 
-typedef GetterFunc<T> = T Function();
-
-class Task<T> extends BaseTask
-{
-  Task(this.callback, priority): super(priority);
-
-  final GetterFunc<T> callback;
-
-  Completer<T> completer = Completer<T>();
-
-  Future<T> get result => this.completer.future;
-}
-
 abstract class PriorityScheduler {
-  Task<T> run<T>(GetterFunc<T> callback, [int priority = 0]);
-
-  void cancel(Task t);
-
+  PriorityTask<T> run<T>(GetterFunc<T> callback, [int priority = 0]);
   int get queueLength;
 }

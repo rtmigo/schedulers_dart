@@ -17,7 +17,7 @@ import '20_base.dart';
 /// The object is useful, for example, for accessing an API with a limit of "no more than 5
 /// requests per minute".
 class RateScheduler implements PriorityScheduler {
-  final HeapPriorityQueue<Task> _queue = HeapPriorityQueue<Task>();
+  final HeapPriorityQueue<PriorityTask> _queue = HeapPriorityQueue<PriorityTask>();
 
   @override
   int get queueLength => this._queue.length;
@@ -32,9 +32,13 @@ class RateScheduler implements PriorityScheduler {
   /// Notifies the scheduler that it should run the callback sometime. The actual call will occur
   /// asynchronously at the time selected by the scheduler.
   @override
-  Task<T> run<T>(GetterFunc<T> callback, [int priority = 0]) {
-    Task<T>? result;
-    result = Task<T>(callback, priority);
+  PriorityTask<T> run<T>(GetterFunc<T> callback, [int priority = 0]) {
+    PriorityTask<T>? result;
+    result = PriorityTask<T>(callback, priority, onCancel: (tsk) {
+      if (!this._queue.remove(tsk)) {
+        throw ArgumentError('Task not found.');
+      }
+    });
     _queue.add(result);
     this._loopAsync();
     return result;
@@ -89,13 +93,7 @@ class RateScheduler implements PriorityScheduler {
           var task = this._queue.removeFirst();
           // remembering task start time
           this._recentTimes.add(Stopwatch()..start());
-          unawaited(Future(() {
-            try {
-              task.completer.complete(task.callback());
-            } catch (e, stacktrace) {
-              task.completer.completeError(e, stacktrace);
-            }
-          }));
+          unawaited(Future(()=>task.runIfNotCanceled()));
         }
       }
     } finally {
@@ -103,10 +101,8 @@ class RateScheduler implements PriorityScheduler {
     }
   }
 
-  @override
-  void cancel(Task t) {
-    if (!this._queue.remove(t)) {
-      throw ArgumentError('Task not found.');
-    }
-  }
+  // @override
+  // void cancel(Task t) {
+  //
+  // }
 }
