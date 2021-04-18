@@ -12,3 +12,4 @@ linter:
 analyzer:
    exclude:
     - example/**
+    - test/**
