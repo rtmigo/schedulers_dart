@@ -61,11 +61,15 @@ jobs:
 
   env:
     runs-on: ubuntu-latest
+    if: github.event.head_commit.message=='publish'
     steps:
       - name: echo
         run: echo ${{ github.event.ref }}
+      - name: hcm
+        run: echo ${{ github.event.head_commit.message }}
       - name: env
         run: env
+
 
 #  pub:
 #    if: startsWith(github.event.ref, 'refs/tags/rc')
