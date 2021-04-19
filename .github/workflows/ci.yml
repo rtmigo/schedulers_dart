@@ -59,7 +59,6 @@ jobs:
           target_branch: staging
           github_token: ${{ github.token }}
 
-
   merge-to-master:
     needs: [test, analyze]
     if: startsWith(github.event.ref, 'refs/tags/rc')
