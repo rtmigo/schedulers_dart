@@ -58,6 +58,11 @@ jobs:
           target_branch: staging
           github_token: ${{ github.token }}
 
+  check-tag:
+    if: startsWith(github.event.ref, 'refs/tags/release')
+    steps:
+      - name: echo
+        echo "Yes"
 
   publish:
     needs: [merge-to-staging]
