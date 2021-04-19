@@ -34,7 +34,6 @@ jobs:
       - name: Run tests Web
         run: dart test --platform chrome
 
-
   analyze:
     runs-on: ubuntu-latest
     steps:
