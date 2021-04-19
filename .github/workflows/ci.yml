@@ -58,7 +58,6 @@ jobs:
           target_branch: staging
           github_token: ${{ github.token }}
 
-
 #  publish:
 #    needs: [merge-to-staging]
 #    if: startsWith(github.event.ref, 'refs/tags/release')
