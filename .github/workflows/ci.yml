@@ -62,7 +62,7 @@ jobs:
     if: startsWith(github.event.ref, 'refs/tags/release')
     steps:
       - name: echo
-        echo "Yes"
+        run: echo "Yes"
 
   publish:
     needs: [merge-to-staging]
