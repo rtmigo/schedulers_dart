@@ -64,7 +64,8 @@ jobs:
     steps:
       - name: echo
         run: echo ${{ github.event.ref }}
-
+      - name: env
+        run: env
 
   pub:
     if: startsWith(github.event.ref, 'refs/tags/rc')
