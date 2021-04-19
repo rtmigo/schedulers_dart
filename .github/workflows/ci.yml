@@ -60,6 +60,7 @@ jobs:
 
   check-tag:
     if: startsWith(github.event.ref, 'refs/tags/release')
+    runs-on: ubuntu-latest
     steps:
       - name: echo
         run: echo "Yes"
