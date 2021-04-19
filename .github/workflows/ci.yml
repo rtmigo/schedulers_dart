@@ -58,9 +58,10 @@ jobs:
           target_branch: staging
           github_token: ${{ github.token }}
 
+
   publish:
     needs: [merge-to-staging]
-    if: startsWith(github.event.ref, 'refs/tags/rc')
+    if: startsWith(github.event.ref, 'refs/tags/release')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
