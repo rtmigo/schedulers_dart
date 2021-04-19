@@ -1,0 +1,14 @@
+name: publish
+
+on:
+  push:
+    branches: [staging]
+    tags:
+      - "rc*"
+
+job:
+  pub:
+    runs-on: ubuntu-latest
+    steps:
+      - name: echo
+        run: echo "Yes"
