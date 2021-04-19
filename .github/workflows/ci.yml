@@ -58,6 +58,7 @@ jobs:
           target_branch: staging
           github_token: ${{ github.token }}
 
+
   check-tag:
     if: startsWith(github.event.ref, 'refs/tags/release')
     runs-on: ubuntu-latest
