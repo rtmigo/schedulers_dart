@@ -6,7 +6,7 @@ on:
     tags:
       - "rc*"
 
-job:
+jobs:
   pub:
     runs-on: ubuntu-latest
     steps:
