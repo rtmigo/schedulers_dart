@@ -84,37 +84,63 @@ jobs:
         run: pub publish -f
         #run: pub publish -dry-run
 
-  to-master:
+  release:
     needs: to-pubdev
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@master
-      - name: Merge current -> master
+      - uses: actions/checkout@v2
+      #- uses: actions/checkout@master
+      - name: Merge to master branch
         uses: devmasx/merge-branch@v1.3.1
         with:
           type: now
           target_branch: master
           github_token: ${{ github.token }}
+      #- uses: actions/checkout@v2
+      - name: Get version from pubspec.yaml
+        run: echo "PKGVER=$(sed -n "s/version://p" pubspec.yaml | xargs)" >> $GITHUB_ENV
+      - name: Publish GitHub release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ env.PKGVER }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 
 
-
-#  pub:
-#    if: startsWith(github.event.ref, 'refs/tags/rc')
-#    runs-on: ubuntu-latest
-#    steps:
-#      - name: echo
-#        run: echo "Yes"
-#
-#  merge-to-master:
-#    needs: [test, analyze]
-#    if: startsWith(github.event.ref, 'refs/tags/rc')
+#  gh-release:
 #    runs-on: ubuntu-latest
 #    steps:
 #      - uses: actions/checkout@v2
-#      - name: Merge current -> master
-#        uses: devmasx/merge-branch@v1.3.1
+#      - name: Get version from pubspec.yaml
+#        run: echo "PKGVER=$(sed -n "s/version://p" pubspec.yaml | xargs)" >> $GITHUB_ENV
+#      - name: Publish GitHub release
+#        uses: softprops/action-gh-release@v1
 #        with:
-#          type: now
-#          target_branch: master
-#          github_token: ${{ github.token }}
+#          tag_name: ${{ env.PKGVER }}
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#
+#
+#
+#
+#
+##  pub:
+##    if: startsWith(github.event.ref, 'refs/tags/rc')
+##    runs-on: ubuntu-latest
+##    steps:
+##      - name: echo
+##        run: echo "Yes"
+##
+##  merge-to-master:
+##    needs: [test, analyze]
+##    if: startsWith(github.event.ref, 'refs/tags/rc')
+##    runs-on: ubuntu-latest
+##    steps:
+##      - uses: actions/checkout@v2
+##      - name: Merge current -> master
+##        uses: devmasx/merge-branch@v1.3.1
+##        with:
+##          type: now
+##          target_branch: master
+##          github_token: ${{ github.token }}
