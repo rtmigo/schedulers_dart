@@ -59,7 +59,7 @@ jobs:
           target_branch: staging
           github_token: ${{ github.token }}
 
-  pub1:
+  env:
     runs-on: ubuntu-latest
     steps:
       - name: echo
@@ -67,22 +67,22 @@ jobs:
       - name: env
         run: env
 
-  pub:
-    if: startsWith(github.event.ref, 'refs/tags/rc')
-    runs-on: ubuntu-latest
-    steps:
-      - name: echo
-        run: echo "Yes"
-
-  merge-to-master:
-    needs: [test, analyze]
-    if: startsWith(github.event.ref, 'refs/tags/rc')
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Merge current -> master
-        uses: devmasx/merge-branch@v1.3.1
-        with:
-          type: now
-          target_branch: master
-          github_token: ${{ github.token }}
+#  pub:
+#    if: startsWith(github.event.ref, 'refs/tags/rc')
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: echo
+#        run: echo "Yes"
+#
+#  merge-to-master:
+#    needs: [test, analyze]
+#    if: startsWith(github.event.ref, 'refs/tags/rc')
+#    runs-on: ubuntu-latest
+#    steps:
+#      - uses: actions/checkout@v2
+#      - name: Merge current -> master
+#        uses: devmasx/merge-branch@v1.3.1
+#        with:
+#          type: now
+#          target_branch: master
+#          github_token: ${{ github.token }}
