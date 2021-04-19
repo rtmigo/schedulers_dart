@@ -1,7 +1,7 @@
 name: my workflow
 on: push
 jobs:
-  build:
+  gh-release:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -9,3 +9,8 @@ jobs:
         run: echo "PKGVER=$(sed -n "s/version://p" pubspec.yaml | xargs)" >> $GITHUB_ENV
       - name: Test
         run: echo $PKGVER
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        tag_name: $PKGVER
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
