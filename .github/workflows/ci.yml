@@ -46,7 +46,6 @@ jobs:
       - name: Publish (dry run)
         run: dart pub publish --dry-run
 
-
   merge-to-staging:
     needs: [test, analyze]
     runs-on: ubuntu-latest
