@@ -2,9 +2,9 @@ name: publish
 
 on:
   push:
-    branches: [staging]
-    tags:
-      - "rc*"
+    tags: rc*
+    branches: staging
+
 
 
 jobs:
