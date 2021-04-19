@@ -59,6 +59,7 @@ jobs:
           target_branch: staging
           github_token: ${{ github.token }}
 
+
   pub:
     if: startsWith(github.event.ref, 'refs/tags/rc')
     runs-on: ubuntu-latest
