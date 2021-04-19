@@ -1,6 +1,3 @@
-
-# schedulers
-
 Dart library for running asynchronous functions on time. Useful for 
 load balancing, rate limiting, lazy execution.
 
