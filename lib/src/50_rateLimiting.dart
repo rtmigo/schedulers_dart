@@ -19,6 +19,8 @@ import '20_base.dart';
 class RateScheduler implements PriorityScheduler {
   final HeapPriorityQueue<PriorityTask> _queue = HeapPriorityQueue<PriorityTask>();
 
+  // todo add dispose
+
   @override
   int get queueLength => this._queue.length;
 
@@ -32,7 +34,7 @@ class RateScheduler implements PriorityScheduler {
   /// Notifies the scheduler that it should run the callback sometime. The actual call will occur
   /// asynchronously at the time selected by the scheduler.
   @override
-  PriorityTask<T> run<T>(GetterFunc<T> callback, [int priority = 0]) {
+  Task<T> run<T>(GetterFunc<T> callback, [int priority = 0]) {
     PriorityTask<T>? result;
     result = PriorityTask<T>(callback, priority, onCancel: (tsk) {
       if (!this._queue.remove(tsk)) {

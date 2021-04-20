@@ -5,13 +5,13 @@ import 'dart:core';
 import 'package:schedulers/src/50_interval.dart';
 import 'package:test/test.dart';
 
+void main() {
 
-void main()
-{
+	// todo test tasks that throw exceptions
+	// todo test waiting for failed tasks
+	// todo test waiting for tasks when the scheduler is disposed
 
-
-	test('IntervalScheduler', () async
-	{
+	test('IntervalScheduler', () async {
 		for (var i=0; i<10; ++i)
 		{
 			var stq = IntervalScheduler(delay: Duration(milliseconds: 1000%30));
@@ -28,15 +28,26 @@ void main()
 			stq.run(() {txt+='Z';}, 100);
 			stq.run(() {txt+='.';}, 3);
 
-			oopsTask.cancel();
-
-			//stq.cancel(oopsTask);
+			oopsTask.willRun = false;
 
 			await stq.completed;
 
-
 			expect(txt, 'ABXYZ...');
 		}
+	});
+
+	test('IntervalScheduler dispose', () async {
+		var stq = IntervalScheduler(delay: Duration(milliseconds: 100));
+		int x = 0;
+		for (var i=0; i<10; ++i) {
+			stq.run(() {x++;});
+		}
+
+		Future.delayed(Duration(milliseconds: 330), () {stq.dispose();});
+
+		await Future.delayed(Duration(milliseconds: 600));
+
+		expect(x, 3);
 	});
 
 }

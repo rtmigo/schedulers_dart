@@ -22,7 +22,7 @@ void main() {
     expect(value, 1);
     await Future.delayed(Duration(milliseconds: 1100));
     expect(value, 2);
-    t3.cancel();
+    t3.willRun = false;
     await Future.delayed(Duration(milliseconds: 1100));
     expect(value, 2);
     s.dispose();
@@ -30,7 +30,7 @@ void main() {
     expect(value, 2);
   });
 
-  test('Cannon add to disposed', () async {
+  test('Cannot add to disposed', () async {
     var s = TimeScheduler();
     s.run(() => {}, DateTime.now().add(Duration(seconds: 1)));
     s.dispose();
