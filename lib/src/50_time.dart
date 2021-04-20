@@ -6,13 +6,13 @@ import '20_base.dart';
 
 class TimeScheduler
 {
-  Task run<T>(GetterFunc<T> func, DateTime time) {
+  Task<T> run<T>(GetterFunc<T> func, DateTime time) {
 
     if (this._disposed) {
       throw StateError('The object is disposed');
     }
 
-    var t = Task<T>(func);
+    final t = InternalTask<T>(func);
     Future.delayed(_computeDelay(time), () {
       if (!this._disposed) {
         t.runIfNotCanceled();

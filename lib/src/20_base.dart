@@ -6,13 +6,23 @@ import 'package:meta/meta.dart';
 
 import '10_unlimited.dart';
 
-typedef CancelFunc<T> = void Function(Task<T>);
+typedef CancelFunc<T> = void Function(InternalTask<T>);
 typedef GetterFunc<T> = T Function();
 
 class TaskCanceled {}
 
-class Task<T> {
-  Task(this._callback, {this.onCancel});
+abstract class Task<T> {
+  Future<T> get result;
+
+  /// Returns true before the task starts. Returns false if the task has already been completed.
+  ///
+  /// By setting this value to false, you can cancel the upcoming start of the task.
+  bool get willRun;
+  set willRun(bool x);
+}
+
+class InternalTask<T> extends Task<T> {
+  InternalTask(this._callback, {this.onCancel});
 
   final GetterFunc<T> _callback;
   
@@ -23,7 +33,7 @@ class Task<T> {
 
   @internal
   void runIfNotCanceled() {
-    if (!this._canceled) {
+    if (this._willRun) {
       try {
         this._readyResult = this._callback();
         this._haveResult = true;
@@ -36,18 +46,13 @@ class Task<T> {
           rethrow;
         }
       }
+      finally {
+        this._willRun = false; // todo unit test
+      }
     }
   }
 
-  /// If the user asked for [result], this method will complete the future with [TaskCanceled]
-  /// error. If the used did not ask for [result], or the method called for the completed task,
-  /// method does nothing.
-  @internal
-  void completeCanceled() {
-    if (this._completer!=null && !this._completer!.isCompleted) {
-      this._completer!.completeError(TaskCanceled);
-    }
-  }
+
 
   // this completer is only initialized if user asks for [result] future before 
   // we have the result. If the user did not ask for result, no one is waiting for the result,
@@ -59,17 +64,38 @@ class Task<T> {
   bool _haveResult = false;
   late T _readyResult;
 
+  @override
   Future<T> get result => _haveResult ? Future<T>.value(_readyResult) : (this._completer??=Completer<T>()).future;
 
-  void cancel() {
-    this._canceled = true;
+  bool _willRun = true;
+
+  @override
+  bool get willRun => _willRun;
+
+  @override
+  set willRun(bool value) {
+
+    if (this._willRun==value) {
+      return;
+    }
+
+    if (value) {
+      throw StateError('Cannot set willRun to true after it after it has been set to false');
+    }
+
+    assert(this._willRun);
+    assert(!value);
+
+    this._willRun = false;
     this.onCancel?.call(this);
-    this.completeCanceled();
+
+    if (this._completer?.isCompleted == false) {
+      this._completer!.completeError(TaskCanceled);
+    }
   }
-  bool _canceled = false;
 }
 
-class PriorityTask<T> extends Task<T> implements Comparable {
+class PriorityTask<T> extends InternalTask<T> implements Comparable {
   static Unlimited _idgen = Unlimited();
 
   PriorityTask(GetterFunc<T> callback, this.priority, {onCancel}): super(callback, onCancel: onCancel);
@@ -93,6 +119,6 @@ class PriorityTask<T> extends Task<T> implements Comparable {
 }
 
 abstract class PriorityScheduler {
-  PriorityTask<T> run<T>(GetterFunc<T> callback, [int priority = 0]);
+  Task<T> run<T>(GetterFunc<T> callback, [int priority = 0]);
   int get queueLength;
 }

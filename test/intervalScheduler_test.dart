@@ -28,7 +28,7 @@ void main() {
 			stq.run(() {txt+='Z';}, 100);
 			stq.run(() {txt+='.';}, 3);
 
-			oopsTask.cancel();
+			oopsTask.willRun = false;
 
 			await stq.completed;
 
