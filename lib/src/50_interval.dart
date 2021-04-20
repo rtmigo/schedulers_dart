@@ -49,10 +49,25 @@ class IntervalScheduler implements PriorityScheduler {
     return t;
   }
 
-
+  bool _disposed = false;
+  void dispose() {
+    _disposed = true;
+    for (var t in _tasks.toList()) {
+      t.completeCanceled(); // todo unit test
+    }
+    _tasks.clear();
+  }
 
   void _runner() {
     this._scheduled = false;
+
+    if (this._disposed) {
+      if (!this._completer.isCompleted) {
+        this._completer.complete();
+      }
+      return;
+    }
+
     try {
       _tasks.removeFirst().runIfNotCanceled();
     } finally {

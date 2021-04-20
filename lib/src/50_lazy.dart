@@ -14,6 +14,10 @@ class LazyScheduler {
   GetterFunc<void>? _callback;
   late Duration latency;
 
+  // todo return Task from run
+  // todo add dispose
+
+
   LazyScheduler({this.latency = const Duration(seconds: 1000), this.callEach});
 
   Unlimited _newestRunId = Unlimited();

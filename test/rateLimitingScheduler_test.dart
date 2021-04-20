@@ -5,6 +5,12 @@ import 'package:schedulers/schedulers.dart';
 import 'package:test/test.dart';
 
 void main() {
+
+  // todo test tasks that throw exceptions
+  // todo test waiting for failed tasks
+  // todo test waiting for tasks when the scheduler is disposed
+
+
   test('RateLimitingScheduler Limiting', () async {
     const F = 2;
     var scheduler = RateScheduler(3, const Duration(milliseconds: 100 * F));
