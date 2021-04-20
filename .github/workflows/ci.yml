@@ -59,10 +59,36 @@ jobs:
           target_branch: staging
           github_token: ${{ github.token }}
 
-  to-pubdev:
+  to-master:
+    if: github.event.head_commit.message=='publish'
     needs: [test, analyze]
     runs-on: ubuntu-latest
-    if: github.event.head_commit.message=='publish'
+    steps:
+      - uses: actions/checkout@v2
+
+      # UPDATING MASTER BRANCH
+
+      - name: Merge to master branch
+        uses: devmasx/merge-branch@v1.3.1
+        with:
+          type: now
+          target_branch: master
+          github_token: ${{ github.token }}
+
+      # ADD GITHUB RELEASE
+
+      - name: Get version from pubspec.yaml
+        run: echo "PKGVER=$(sed -n "s/version://p" pubspec.yaml | xargs)" >> $GITHUB_ENV
+      - name: Publish GitHub release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ env.PKGVER }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  to-pubdev:
+    needs: to-master
+    runs-on: ubuntu-latest
     container:
       image:  google/dart:latest
     steps:
@@ -93,28 +119,3 @@ jobs:
       - name: Publish package
         run: pub publish -f
 
-  release:
-    needs: to-pubdev
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-
-      # UPDATING MASTER BRANCH
-
-      - name: Merge to master branch
-        uses: devmasx/merge-branch@v1.3.1
-        with:
-          type: now
-          target_branch: master
-          github_token: ${{ github.token }}
-
-      # ADD GITHUB RELEASE
-
-      - name: Get version from pubspec.yaml
-        run: echo "PKGVER=$(sed -n "s/version://p" pubspec.yaml | xargs)" >> $GITHUB_ENV
-      - name: Publish GitHub release
-        uses: softprops/action-gh-release@v1
-        with:
-          tag_name: ${{ env.PKGVER }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
