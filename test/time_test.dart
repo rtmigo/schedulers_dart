@@ -22,7 +22,7 @@ void main() {
     expect(value, 1);
     await Future.delayed(Duration(milliseconds: 1100));
     expect(value, 2);
-    t3.cancel();
+    t3.willRun = false;
     await Future.delayed(Duration(milliseconds: 1100));
     expect(value, 2);
     s.dispose();
