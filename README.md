@@ -5,16 +5,6 @@ load balancing, rate limiting, lazy execution.
 after object creation. But it fact all the schedulers are ready to handle 
 `run` calls at random moments.*
 
-# TimeScheduler
-
-Runs tasks asynchronously at the specified time.
-
-``` dart
-final scheduler = TimeScheduler();
-
-scheduler.run(() { ... callback ... }, DateTime(2020, 02, 20, 20, 02, 20));
-```
-
 # IntervalScheduler
 
 Runs tasks asynchronously, maintaining a fixed time interval between starts.
@@ -50,6 +40,17 @@ scheduler.run(()=>downloadPage('pageH'));
 scheduler.run(()=>downloadPage('pageI'));
 ```
 
+# TimeScheduler
+
+Runs tasks asynchronously at the specified time.
+
+``` dart
+final scheduler = TimeScheduler();
+
+// run the function on January 1st at 17:75
+scheduler.run(() { ... }, DateTime(2020, 1, 1, 17, 45));
+```
+
 # LazyScheduler
 
 Runs only the last added task and only if no new tasks have been added during 
@@ -61,7 +62,7 @@ final scheduler = LazyScheduler(latency: Duration(seconds: 1));
 scheduler.run(()=>pushUpdate('1')); // maybe we will push 1
 scheduler.run(()=>pushUpdate('1+1')); // no we will push 1+1
 scheduler.run(()=>pushUpdate('1+1-1')); // no we will push 1+1-1
-scheduler.run(()=>pushUpdate('1')); // it's good we so lazy
+scheduler.run(()=>pushUpdate('1')); // it's good we're so lazy
 scheduler.run(()=>pushUpdate('777')); // maybe we will push this
 ```
 
