@@ -1,7 +1,7 @@
-# 0.2.3-alpha
+# 0.3.0
 
 - Added TimeScheduler
 
-# 0.1.0+1-alpha
+# 0.1.0
 
 - Initial release
