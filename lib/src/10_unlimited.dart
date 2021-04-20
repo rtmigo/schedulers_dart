@@ -9,8 +9,8 @@ import 'package:meta/meta.dart';
 class Unlimited implements Comparable<Unlimited> {
 
   // Looks like I invented the wheel. Instead of this object, we could use a regular BigInt.
-  // I still keeping it, because it's well tested and not a fact that BigInt is more effective
-  // for a specific task.
+  // I still keeping it, because it's tested and not a fact that BigInt is more effective
+  // for the specific task.
 
   Unlimited(): _parts = <int>[0];
 

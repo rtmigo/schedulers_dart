@@ -30,7 +30,7 @@ void main() {
     expect(value, 2);
   });
 
-  test('Cannon add to disposed', () async {
+  test('Cannot add to disposed', () async {
     var s = TimeScheduler();
     s.run(() => {}, DateTime.now().add(Duration(seconds: 1)));
     s.dispose();

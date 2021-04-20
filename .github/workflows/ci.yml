@@ -1,6 +1,4 @@
-# https://github.com/dart-lang/setup-dart
-
-name: test-and-merge
+name: ci
 
 on:
   push:
@@ -64,7 +62,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      # UPDATING MASTER BRANCH
+      # UPDATE MASTER BRANCH
 
       - name: Merge to master branch
         uses: devmasx/merge-branch@v1.3.1
@@ -114,4 +112,3 @@ jobs:
           EOF
       - name: Publish package
         run: pub publish -f
-

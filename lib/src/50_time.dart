@@ -23,6 +23,7 @@ class TimeScheduler
   }
 
   void dispose() {
+    // todo cancel tasks
     this._disposed = true;
   }
 

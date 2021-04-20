@@ -9,32 +9,62 @@ import '10_unlimited.dart';
 typedef CancelFunc<T> = void Function(Task<T>);
 typedef GetterFunc<T> = T Function();
 
+class TaskCanceled {}
 
 class Task<T> {
   Task(this._callback, {this.onCancel});
 
   final GetterFunc<T> _callback;
+  
+  /// Called when used [cancel]s the task. It helps the scheduler to remove the task from 
+  /// the queue, if needed. 
+  @internal
   final CancelFunc? onCancel;
 
   @internal
   void runIfNotCanceled() {
     if (!this._canceled) {
       try {
-        this._completer.complete(this._callback());
+        this._readyResult = this._callback();
+        this._haveResult = true;
+        this._completer?.complete(this._readyResult);
       }
       catch (e, stacktrace) {
-        this._completer.completeError(e, stacktrace);
+        if (this._completer!=null) {
+          this._completer!.completeError(e, stacktrace);
+        } else {
+          rethrow;
+        }
       }
     }
   }
 
-  final Completer<T> _completer = Completer<T>();
+  /// If the user asked for [result], this method will complete the future with [TaskCanceled]
+  /// error. If the used did not ask for [result], or the method called for the completed task,
+  /// method does nothing.
+  @internal
+  void completeCanceled() {
+    if (this._completer!=null && !this._completer!.isCompleted) {
+      this._completer!.completeError(TaskCanceled);
+    }
+  }
 
-  Future<T> get result => this._completer.future;
+  // this completer is only initialized if user asks for [result] future before 
+  // we have the result. If the user did not ask for result, no one is waiting for the result,
+  // so we can safely cancel the task without [completeError]
+  Completer<T>? _completer;
+
+  // when the task completes, it initializes sets the following two field. If the user reads
+  // [result] property after that, we will just return the value instead messing with Completer
+  bool _haveResult = false;
+  late T _readyResult;
+
+  Future<T> get result => _haveResult ? Future<T>.value(_readyResult) : (this._completer??=Completer<T>()).future;
 
   void cancel() {
     this._canceled = true;
     this.onCancel?.call(this);
+    this.completeCanceled();
   }
   bool _canceled = false;
 }
