@@ -35,11 +35,9 @@ jobs:
 
   analyze:
     runs-on: ubuntu-latest
-    container:
-      image:  google/dart:latest
     steps:
       - uses: actions/checkout@v2
-      #- uses: dart-lang/setup-dart@v1
+      - uses: dart-lang/setup-dart@v1
       - name: Install dependencies
         run: dart pub get
       - name: Analyze
@@ -89,11 +87,9 @@ jobs:
   to-pubdev:
     needs: to-master
     runs-on: ubuntu-latest
-    container:
-      image:  google/dart:latest
     steps:
       - uses: actions/checkout@v2
-
+      - uses: dart-lang/setup-dart@v1
       - name: Install dependencies
         run: dart pub get
       - name: Format
