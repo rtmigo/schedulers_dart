@@ -21,15 +21,13 @@ jobs:
   test:
     timeout-minutes: 9
     runs-on: ${{ matrix.os }}
-    container:
-      image:  google/dart:latest
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest] # , macos-latest
         platform: [vm, chrome] # , macos-latest
     steps:
       - uses: actions/checkout@v2
-      #- uses: dart-lang/setup-dart@v1
+      - uses: dart-lang/setup-dart@v1
       - name: Install dependencies
         run: dart pub get
       - name: Run tests
@@ -37,9 +35,11 @@ jobs:
 
   analyze:
     runs-on: ubuntu-latest
+    container:
+      image:  google/dart:latest
     steps:
       - uses: actions/checkout@v2
-      - uses: dart-lang/setup-dart@v1
+      #- uses: dart-lang/setup-dart@v1
       - name: Install dependencies
         run: dart pub get
       - name: Analyze
