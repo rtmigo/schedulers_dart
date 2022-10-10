@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: (c) 2021 Artёm IG <github.com/rtmigo>
 // SPDX-License-Identifier: MIT
 
-import 'package:schedulers/src/10_unlimited.dart';
+import 'package:schedulers/src/a_unlimited.dart';
 import 'package:test/test.dart';
 
 void main() {

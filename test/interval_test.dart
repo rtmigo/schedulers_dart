@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: MIT
 
 import 'dart:core';
-import 'package:schedulers/src/50_interval.dart';
+import 'package:schedulers/src/c_interval.dart';
 import 'package:test/test.dart';
 
 void main() {

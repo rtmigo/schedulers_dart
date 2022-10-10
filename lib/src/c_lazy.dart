@@ -1,8 +1,8 @@
 // SPDX-FileCopyrightText: (c) 2021 Artёm IG <github.com/rtmigo>
 // SPDX-License-Identifier: MIT
 
-import 'package:schedulers/src/10_unlimited.dart';
-import 'package:schedulers/src/20_base.dart';
+import 'package:schedulers/src/a_unlimited.dart';
+import 'package:schedulers/src/b_base.dart';
 
 /// Runs only the last added task and only if no new tasks have been added during the time interval.
 ///

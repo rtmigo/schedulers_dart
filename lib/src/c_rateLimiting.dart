@@ -6,7 +6,7 @@ import 'dart:collection';
 
 import 'package:collection/collection.dart';
 
-import '20_base.dart';
+import 'b_base.dart';
 
 /// Runs no more than N tasks in a certain period of time.
 ///
