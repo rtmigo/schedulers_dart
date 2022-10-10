@@ -7,13 +7,13 @@ import 'package:meta/meta.dart';
 
 import 'a_unlimited.dart';
 
-typedef CancelFunc<T> = void Function(InternalTask<T>);
-typedef GetterFunc<T> = T Function();
+typedef CancelFunc<R> = void Function(InternalTask<R>);
+typedef GetterFunc<R> = R Function();
 
 class TaskCanceled {}
 
-abstract class Task<T> {
-  Future<T> get result;
+abstract class Task<R> {
+  Future<R> get result;
 
   /// Returns true before the task starts. Returns false if the task has already
   /// been completed.
@@ -25,15 +25,15 @@ abstract class Task<T> {
   set willRun(final bool x);
 }
 
-class InternalTask<T> extends Task<T> {
+class InternalTask<R> extends Task<R> {
   InternalTask(this._callback, {this.onCancel});
 
-  final GetterFunc<T> _callback;
+  final GetterFunc<R> _callback;
 
   /// Called when used [cancel]s the task. It helps the scheduler to remove the
   /// task from the queue, if needed.
   @internal
-  final CancelFunc<T>? onCancel;
+  final CancelFunc<R>? onCancel;
 
   @internal
   void runIfNotCanceled() {
@@ -57,18 +57,18 @@ class InternalTask<T> extends Task<T> {
   // this completer is only initialized if user asks for [result] future before
   // we have the result. If the user did not ask for result, no one is waiting
   // for the result, so we can safely cancel the task without [completeError]
-  Completer<T>? _completer;
+  Completer<R>? _completer;
 
   // when the task completes, it initializes sets the following two field. If
   // the user reads [result] property after that, we will just return the value
   // instead messing with Completer
   bool _haveResult = false;
-  late T _readyResult;
+  late R _readyResult;
 
   @override
-  Future<T> get result => _haveResult
-      ? Future<T>.value(_readyResult)
-      : (this._completer ??= Completer<T>()).future;
+  Future<R> get result => _haveResult
+      ? Future<R>.value(_readyResult)
+      : (this._completer ??= Completer<R>()).future;
 
   bool _willRun = true;
 
@@ -98,21 +98,19 @@ class InternalTask<T> extends Task<T> {
   }
 }
 
-class PriorityTask<T> extends InternalTask<T>
-    implements Comparable<PriorityTask<T>> {
+class PriorityTask<R> extends InternalTask<R>
+    implements Comparable<PriorityTask<R>> {
   static Unlimited _idGenerator = Unlimited();
 
-  PriorityTask(final GetterFunc<T> callback, this.priority,
-      {final CancelFunc<T>? onCancel})
+  PriorityTask(final GetterFunc<R> callback, this.priority,
+      {final CancelFunc<R>? onCancel})
       : super(callback, onCancel: onCancel);
 
   final int priority;
   final id = (PriorityTask._idGenerator = PriorityTask._idGenerator.next());
 
   @override
-  int compareTo(final PriorityTask<T> other) {
-    //final otherTask = other as PriorityTask<T>;
-
+  int compareTo(final PriorityTask<R> other) {
     // taskA<taskB if taskA has larger priority
     var x = -this.priority.compareTo(other.priority);
 
@@ -126,7 +124,7 @@ class PriorityTask<T> extends InternalTask<T>
 }
 
 abstract class PriorityScheduler {
-  Task<T> run<T>(final GetterFunc<T> callback, [final int priority = 0]);
+  Task<R> run<R>(final GetterFunc<R> callback, [final int priority = 0]);
 
   int get queueLength;
 }

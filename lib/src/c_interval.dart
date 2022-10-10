@@ -34,13 +34,13 @@ class IntervalScheduler implements PriorityScheduler {
   /// actual call will occur asynchronously at the time selected by the
   /// scheduler.
   @override
-  Task<T> run<T>(final GetterFunc<T> callback, [final int priority = 0]) {
+  Task<R> run<R>(final GetterFunc<R> callback, [final int priority = 0]) {
     if (this._tasks.length <= 0) {
       this._completer = Completer();
     }
 
     final newTask = PriorityTask(callback, priority,
-        onCancel: (final InternalTask<T> canceledTask) {
+        onCancel: (final InternalTask<R> canceledTask) {
       if (!this._tasks.remove(canceledTask as PriorityTask<dynamic>)) {
         throw ArgumentError('Task not found.');
       }

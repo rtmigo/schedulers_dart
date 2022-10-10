@@ -36,9 +36,9 @@ class RateScheduler implements PriorityScheduler {
   /// actual call will occur asynchronously at the time selected by the
   /// scheduler.
   @override
-  Task<T> run<T>(final GetterFunc<T> callback, [final int priority = 0]) {
-    PriorityTask<T>? result;
-    result = PriorityTask<T>(callback, priority, onCancel: (final tsk) {
+  Task<R> run<R>(final GetterFunc<R> callback, [final int priority = 0]) {
+    PriorityTask<R>? result;
+    result = PriorityTask<R>(callback, priority, onCancel: (final tsk) {
       if (!this._queue.remove(tsk as PriorityTask<dynamic>)) {
         throw ArgumentError('Task not found.');
       }
