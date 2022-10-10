@@ -22,15 +22,16 @@ class LazyScheduler {
 
   Unlimited _newestRunId = Unlimited();
 
-  /// Notifies the scheduler that it should run the callback sometime. The actual call will occur
-  /// asynchronously at the time selected by the scheduler.
-  void run(GetterFunc<void> callback) async {
+  /// Notifies the scheduler that it should run the callback sometime. The
+  /// actual call will occur asynchronously at the time selected by the
+  /// scheduler.
+  void run(final GetterFunc<void> callback) async {
     this._callback = callback;
 
     _newestRunId = _newestRunId.next();
     final runId = _newestRunId;
 
-    await Future.delayed(this.latency);
+    await Future<void>.delayed(this.latency);
 
     if (this._newestRunId == runId) {
       this._callback!();

@@ -6,7 +6,7 @@ import '20_base.dart';
 
 class TimeScheduler
 {
-  Task<T> run<T>(GetterFunc<T> func, DateTime time) {
+  Task<T> run<T>(final GetterFunc<T> func, final DateTime time) {
 
     if (this._disposed) {
       throw StateError('The object is disposed');
@@ -30,7 +30,7 @@ class TimeScheduler
   bool _disposed = false;
 
 
-  Duration _computeDelay(DateTime targetTime, {DateTime? now})
+  Duration _computeDelay(final DateTime targetTime, {DateTime? now})
   {
     now ??= DateTime.now();
 
