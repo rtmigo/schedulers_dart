@@ -26,7 +26,7 @@ class IntervalScheduler implements PriorityScheduler {
 
   bool get isComplete => this._tasks.length > 0;
 
-  Completer _completer = Completer();
+  Completer<void> _completer = Completer();
 
   Future<void> get completed => this._completer.future;
 
