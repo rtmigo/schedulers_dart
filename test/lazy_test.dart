@@ -5,6 +5,8 @@ import 'package:schedulers/schedulers.dart';
 import 'package:test/test.dart';
 
 void main() {
+  // todo test tasks that throw exceptions
+
   test('lazy 1', () async {
 
     final scheduler = LazyScheduler(latency: const Duration(milliseconds: 100));

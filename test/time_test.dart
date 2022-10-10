@@ -5,6 +5,8 @@ import 'package:schedulers/schedulers.dart';
 import 'package:test/test.dart';
 
 void main() {
+  // todo test tasks that throw exceptions
+
   test('Time', () async {
 
     var now = DateTime.now().toUtc();

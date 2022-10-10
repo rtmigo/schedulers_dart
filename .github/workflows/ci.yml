@@ -8,21 +8,14 @@ on:
       - '**.md'
       - '**.txt'
 
-  pull_request:
-    branches: [dev]
-    paths-ignore:
-      - 'example/*'
-      - '**.md'
-      - '**.txt'
-
 jobs:
   test:
     timeout-minutes: 9
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest] # , macos-latest
-        platform: [vm, chrome] # , macos-latest
+        os: [ubuntu-latest, windows-latest]
+        platform: [vm, node]
     steps:
       - uses: actions/checkout@v2
       - uses: dart-lang/setup-dart@v1
