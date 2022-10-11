@@ -4,6 +4,7 @@
 import 'dart:async';
 
 import 'package:collection/collection.dart';
+import 'package:meta/meta.dart';
 
 import 'b_base.dart';
 
@@ -14,24 +15,22 @@ class ParallelScheduler implements PriorityScheduler {
   final int max;
   final _tasks = HeapPriorityQueue<PriorityTask<dynamic>>();
 
+  /// [max] sets the maximum number of tasks that can be run simultaneously.
   ParallelScheduler(this.max);
 
   @override
   Task<R> run<R>(final GetterFunc<R> callback, [final int priority = 0]) {
     final newTask = PriorityTask(callback, priority,
-        onCancel: (final InternalTask<dynamic> t) =>
-            removeTaskFromQueue(_tasks, t));
+        onCancel: _tasks.removeOrThrow);
 
     _tasks.add(newTask);
     _maybeRunTasks();
-    //Future.microtask(() => _maybeRunTasks());
     return newTask;
   }
 
-  //Future<R> run(final Future<R> Function() func) => _add(func).result;
-
   int _currentlyRunning = 0;
 
+  @internal
   int get currentlyRunning => _currentlyRunning;
 
   /// Это синхронная функция, которая запускает задачи асинхронно рекурсивно.
@@ -59,6 +58,5 @@ class ParallelScheduler implements PriorityScheduler {
   }
 
   @override
-  // TODO: implement queueLength
   int get queueLength => _tasks.length;
 }

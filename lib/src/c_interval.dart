@@ -39,8 +39,7 @@ class IntervalScheduler implements PriorityScheduler {
     }
 
     final newTask = PriorityTask(callback, priority,
-        onCancel: (final InternalTask<dynamic> t) =>
-            removeTaskFromQueue(_tasks, t));
+        onCancel: _tasks.removeOrThrow);
 
     _tasks.add(newTask);
     this._runRunnerLater();

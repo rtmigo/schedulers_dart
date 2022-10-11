@@ -1,13 +1,14 @@
 # 1.0.0 
 
 - Added `ParallelScheduler`
-- Result of `GetterFunc` changed from `<R>` to `FutureOr<R>`
 - Results of tasks are now `await`ed by the schedulers
-- Dart version requirement increased to 2.18
+- Result of `GetterFunc` changed from `<R>` to `FutureOr<R>`
+- Dart SDK version requirements increased to 2.18
+- Added example of basic usage of `RateScheduler`
 
 # 0.3.1
 
-- Added TimeScheduler
+- Added `TimeScheduler`
 
 # 0.1.0
 

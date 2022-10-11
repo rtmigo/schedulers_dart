@@ -74,7 +74,7 @@ scheduler.run(() { ... }, DateTime(2020, 1, 1, 17, 45));
 Runs only the last added task and only if no new tasks have been added during 
 the time interval.
 
-``` dart
+```dart
 final scheduler = LazyScheduler(latency: Duration(seconds: 1));
 
 scheduler.run(() => pushUpdate('1')); // maybe we will push 1
