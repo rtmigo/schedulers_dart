@@ -17,8 +17,7 @@ import 'b_base.dart';
 /// The object is useful, for example, for accessing an API with a limit of "no
 /// more than 5 requests per minute".
 class RateScheduler implements PriorityScheduler {
-  final HeapPriorityQueue<PriorityTask<dynamic>> _queue =
-      HeapPriorityQueue<PriorityTask<dynamic>>();
+  final _queue = HeapPriorityQueue<PriorityTask<dynamic>>();
 
   // todo add dispose
 
@@ -38,11 +37,8 @@ class RateScheduler implements PriorityScheduler {
   @override
   Task<R> run<R>(final GetterFunc<R> callback, [final int priority = 0]) {
     PriorityTask<R>? result;
-    result = PriorityTask<R>(callback, priority, onCancel: (final tsk) {
-      if (!this._queue.remove(tsk as PriorityTask<dynamic>)) {
-        throw ArgumentError('Task not found.');
-      }
-    });
+    result = PriorityTask<R>(callback, priority,
+        onCancel: (final tsk) => removeTaskFromQueue(_queue, tsk));
     _queue.add(result);
     this._loopAsync();
     return result;

@@ -13,7 +13,7 @@ void main() {
 
   test('RateLimitingScheduler Limiting', () async {
     const F = 2;
-    var scheduler = RateScheduler(3, const Duration(milliseconds: 100 * F));
+    final scheduler = RateScheduler(3, const Duration(milliseconds: 100 * F));
 
     int a = 0;
 
@@ -28,22 +28,22 @@ void main() {
     expect(a, 0);
 
     // we run three tasks immediately. Half interval passed, but they are all completed
-    await Future.delayed(Duration(milliseconds: 50 * F));
+    await Future<void>.delayed(Duration(milliseconds: 50 * F));
     expect(a, 3);
 
-    await Future.delayed(Duration(milliseconds: 100 * F));
+    await Future<void>.delayed(Duration(milliseconds: 100 * F));
     expect(a, 6);
 
-    await Future.delayed(Duration(milliseconds: 100 * F));
+    await Future<void>.delayed(Duration(milliseconds: 100 * F));
     expect(a, 9);
 
-    await Future.delayed(Duration(milliseconds: 100 * F));
+    await Future<void>.delayed(Duration(milliseconds: 100 * F));
     expect(a, 10);
   });
 
   test('RateLimitingScheduler Different Tasks', () async {
     const F = 1;
-    var scheduler = RateScheduler(5, Duration(milliseconds: 100 * F));
+    final scheduler = RateScheduler(5, Duration(milliseconds: 100 * F));
 
     int a = 0;
     int b = 0;
@@ -61,7 +61,7 @@ void main() {
       c++;
     }
 
-    var tasks = [];
+    final List<void Function()> tasks = [];
     for (int i = 0; i < 4; ++i) {
       tasks.add(taskA);
     }
@@ -74,11 +74,11 @@ void main() {
 
     tasks.shuffle();
 
-    for (var t in tasks) {
+    for (final t in tasks) {
       scheduler.run(t);
     }
 
-    await Future.delayed(Duration(milliseconds: 500 * F));
+    await Future<void>.delayed(Duration(milliseconds: 500 * F));
 
     expect(a, 4);
     expect(b, 3);
@@ -86,7 +86,7 @@ void main() {
   });
 
   test('RateLimitingScheduler Future', () async {
-    var scheduler = RateScheduler(5, Duration(milliseconds: 100));
+    final scheduler = RateScheduler(5, Duration(milliseconds: 100));
 
     int a = 0;
     int funcOk() {
@@ -97,11 +97,11 @@ void main() {
       throw Exception('Oops');
     }
 
-    var task1 = scheduler.run(funcOk);
-    var taskZ = scheduler.run(funcOops);
-    var task2 = scheduler.run(funcOk);
+    final task1 = scheduler.run(funcOk);
+    final taskZ = scheduler.run(funcOops);
+    final task2 = scheduler.run(funcOk);
 
-    expect(() async => await taskZ.result, throwsException);
+    expect(() async => taskZ.result, throwsException);
     expect(await task2.result, 2);
     expect(await task1.result, 1);
   });

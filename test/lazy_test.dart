@@ -13,8 +13,8 @@ void main() {
 
     int x=0;
     int y=0;
-    final funcA = ()=>x++;
-    final funcB = ()=>y++;
+    int funcA()=>x++;
+    int funcB()=>y++;
 
     for (int i=0; i<100; ++i) {
       scheduler.run(funcA);
@@ -22,9 +22,9 @@ void main() {
 
     expect(x, 0);
 
-    await Future.delayed(const Duration(milliseconds: 10));
+    await Future<void>.delayed(const Duration(milliseconds: 10));
     expect(x, 0);
-    await Future.delayed(const Duration(milliseconds: 100));
+    await Future<void>.delayed(const Duration(milliseconds: 100));
     expect(x, 1);
 
     for (int i=0; i<100; ++i) {
@@ -34,11 +34,11 @@ void main() {
     expect(x, 1);
     expect(y, 0);
 
-    await Future.delayed(const Duration(milliseconds: 100));
+    await Future<void>.delayed(const Duration(milliseconds: 100));
     expect(x, 1);
     expect(y, 1);
 
-    await Future.delayed(const Duration(milliseconds: 100));
+    await Future<void>.delayed(const Duration(milliseconds: 100));
     expect(x, 1);
     expect(y, 1);
   });

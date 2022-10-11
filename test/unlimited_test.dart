@@ -53,7 +53,7 @@ void main() {
     expect(x.partsLength, 1);
 
     for (int i = 0; i < 10; ++i) {
-      var n = x.next();
+      final n = x.next();
       expect(n > x, true);
       expect(n >= x, true);
       x = n;
@@ -68,7 +68,7 @@ void main() {
     expect(x.partsLength, 2);
 
     for (int i = 0; i < 10; ++i) {
-      var n = x.next();
+      final n = x.next();
       expect(n > x, true);
       expect(n >= x, true);
       x = n;
@@ -83,7 +83,7 @@ void main() {
     final strings = <String>[];
 
     for (int i = 0; i < 10; ++i) {
-      var n = x.next();
+      final n = x.next();
       x = n;
       strings.add(x.toString());
     }
@@ -119,15 +119,15 @@ void main() {
   });
 
   test('Hash strings', () {
-    var a = Unlimited();
-    var b = Unlimited();
+    final a = Unlimited();
+    final b = Unlimited();
 
-    var a1 = a.next();
+    final a1 = a.next();
 
     expect(a.hashCode, b.hashCode);
     expect(a1.hashCode, isNot(a.hashCode));
 
-    var big = Unlimited.fromParts([Unlimited.partMax - 5, Unlimited.partMax]);
+    final big = Unlimited.fromParts([Unlimited.partMax - 5, Unlimited.partMax]);
     expect(big.hashCode, big.hashCode);
     expect(big.hashCode, isNot(big.next().hashCode));
   });
