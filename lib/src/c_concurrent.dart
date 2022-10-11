@@ -1,14 +1,20 @@
+// SPDX-FileCopyrightText: (c) 2022 Artsiom iG <github.com/rtmigo>
+// SPDX-License-Identifier: MIT
+
 import 'dart:async';
 
 import 'package:collection/collection.dart';
 
 import 'b_base.dart';
 
+/// Limits the number of tasks running at the same time. This is somewhat
+/// similar to using a thread pool or process pool. But it just runs async
+/// functions.
 class ParallelScheduler implements PriorityScheduler {
-  final int concurrency;
+  final int max;
   final _tasks = HeapPriorityQueue<PriorityTask<dynamic>>();
 
-  ParallelScheduler({this.concurrency = 8});
+  ParallelScheduler(this.max);
 
   @override
   Task<R> run<R>(final GetterFunc<R> callback, [final int priority = 0]) {
@@ -35,9 +41,9 @@ class ParallelScheduler implements PriorityScheduler {
   /// Тест с миллионом запускаемых задач показал, что это не приводит к
   /// проблемам вроде переполнения стека.
   void _maybeRunTasks() {
-    assert(_currentlyRunning <= concurrency);
+    assert(_currentlyRunning <= max);
 
-    while (_currentlyRunning < concurrency && _tasks.isNotEmpty) {
+    while (_currentlyRunning < max && _tasks.isNotEmpty) {
       final runMe = _tasks.removeFirst();
       _currentlyRunning += 1;
       Future.microtask(() async {
@@ -49,7 +55,7 @@ class ParallelScheduler implements PriorityScheduler {
       });
     }
 
-    assert(_currentlyRunning == concurrency || _tasks.isEmpty);
+    assert(_currentlyRunning == max || _tasks.isEmpty);
   }
 
   @override

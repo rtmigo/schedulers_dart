@@ -1,23 +1,23 @@
 Dart library for running asynchronous functions on time. Useful for 
 load balancing, rate limiting, lazy execution.
 
-*In the examples below, all the `run(callback)` calls are performed right 
-after object creation. But it fact all the schedulers are ready to handle 
-`run` calls at random moments.*
+*In the examples below, all the `run` calls are performed right 
+after object creation. In fact all the schedulers can handle 
+`run`s at random moments.*
 
-# IntervalScheduler
+## IntervalScheduler
 
 Runs tasks asynchronously, maintaining a fixed time interval between starts.
 
 ``` dart
 final scheduler = IntervalScheduler(delay: Duration(seconds: 1));
 
-scheduler.run(()=>downloadPage('pageA')); // starts download immediately
-scheduler.run(()=>downloadPage('pageB')); // will start one second later
-scheduler.run(()=>downloadPage('pageC')); // will start two seconds later
+scheduler.run(()=>download('pageA')); // starts download immediately
+scheduler.run(()=>download('pageB')); // will start one second later
+scheduler.run(()=>download('pageC')); // will start two seconds later
 ```
 
-# RateScheduler
+## RateScheduler
 
 Runs no more than N tasks in a certain period of time.
 
@@ -25,40 +25,40 @@ Runs no more than N tasks in a certain period of time.
 final scheduler = RateScheduler(3, Duration(seconds: 1)); // 3 per second
 
 // the following tasks are executed immediately
-scheduler.run(()=>downloadPage('pageA'));
-scheduler.run(()=>downloadPage('pageB'));
-scheduler.run(()=>downloadPage('pageC'));
+scheduler.run(()=>download('pageA'));
+scheduler.run(()=>download('pageB'));
+scheduler.run(()=>download('pageC'));
 
 // the following tasks are executed one second later
-scheduler.run(()=>downloadPage('pageD'));
-scheduler.run(()=>downloadPage('pageE'));
-scheduler.run(()=>downloadPage('pageF'));
+scheduler.run(()=>download('pageD'));
+scheduler.run(()=>download('pageE'));
+scheduler.run(()=>download('pageF'));
  
 // the following tasks are executed two seconds later
-scheduler.run(()=>downloadPage('pageG'));
-scheduler.run(()=>downloadPage('pageH'));
-scheduler.run(()=>downloadPage('pageI'));
+scheduler.run(()=>download('pageG'));
+scheduler.run(()=>download('pageH'));
+scheduler.run(()=>download('pageI'));
 ```
 
-# ParallelScheduler
+## ParallelScheduler
 
-Limits the number of tasks running at the same time. Acts like a traditional
-thread pool or process pool. But it runs regular asynchronous functions.
+Limits the number of tasks running at the same time. This is somewhat similar to
+using a thread pool or process pool. But it just runs 
+`async` functions.
 
 ```dart
-// Will run a maximum of three tasks at the same time.
-final scheduler = ParallelScheduler(concurrency: 3); 
+// we will run a maximum of three tasks at the same time
+final scheduler = ParallelScheduler(3); 
 
 scheduler.run(()=>asyncDownload('pageA')); // executed immediately
 scheduler.run(()=>asyncDownload('pageB')); // executed immediately
 scheduler.run(()=>asyncDownload('pageC')); // executed immediately
 
 scheduler.run(()=>asyncDownload('pageD'));
-// task for pageD waits until some of the other pages will finish 
-// loading, then executes 
+// task for pageD will execute when some of the previous tasks finish 
 ```
 
-# TimeScheduler
+## TimeScheduler
 
 Runs tasks asynchronously at the specified time.
 
@@ -69,7 +69,7 @@ final scheduler = TimeScheduler();
 scheduler.run(() { ... }, DateTime(2020, 1, 1, 17, 45));
 ```
 
-# LazyScheduler
+## LazyScheduler
 
 Runs only the last added task and only if no new tasks have been added during 
 the time interval.
@@ -94,4 +94,21 @@ scheduler.run(()=>pushUpdate('13')); // we pushed 777, now we maybe push 13
 scheduler.run(()=>pushUpdate('10')); // no, we will not push 13...
 ```
 
+# Awaiting results
 
+Each of the schedulers allows you to wait for the result of the function 
+as a regular `Future`. You just have to wait for the `.result`.
+
+```dart
+final a = await download('pageA');
+final b = await scheduler.run(()=>download('pageB')).result;
+```
+
+These two calls to the `download` function behave in much the same way. The only
+difference is that the scheduler can delay the execution of the function for
+suitable times.
+
+# License
+
+Copyright © 2022 [Artsiom iG](https://github.com/rtmigo).
+Released under the [MIT License](LICENSE).

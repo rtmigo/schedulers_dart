@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: (c) 2021 Artёm IG <github.com/rtmigo>
+// SPDX-FileCopyrightText: (c) 2021 Artsiom iG <github.com/rtmigo>
 // SPDX-License-Identifier: MIT
 
 import 'package:schedulers/schedulers.dart';
