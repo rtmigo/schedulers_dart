@@ -1,6 +1,6 @@
 import 'package:schedulers/schedulers.dart';
 
-Future<void> download(String url) {
+Future<void> download(String url) async {
   // relax, this is an example
 }
 
