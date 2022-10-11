@@ -8,7 +8,25 @@ on:
       - '**.md'
       - '**.txt'
 
+concurrency:
+  # subsequently queued workflow run will interrupt previous runs
+  group: '${{ github.workflow }} @ ${{ github.event.pull_request.head.label || github.head_ref || github.ref }}'
+  cancel-in-progress: true
+
 jobs:
+
+  release-flag:
+    if: contains(github.event.head_commit.message, '!!release')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+
+  master-flag:
+    if: contains(github.event.head_commit.message, '!!master')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+
   test:
     timeout-minutes: 9
     runs-on: ${{ matrix.os }}
@@ -50,7 +68,7 @@ jobs:
 
   to-master:
     if: github.event.head_commit.message=='publish'
-    needs: [test, analyze]
+    needs: [to-staging, release-flag]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -76,7 +94,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   to-pubdev:
-    needs: to-master
+    needs: [to-staging, release-flag]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
