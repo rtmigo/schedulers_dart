@@ -70,7 +70,6 @@ jobs:
           github_token: ${{ github.token }}
 
   to-master:
-    if: github.event.head_commit.message=='publish'
     needs: [to-staging, master-flag]
     runs-on: ubuntu-latest
     steps:
