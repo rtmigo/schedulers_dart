@@ -110,5 +110,5 @@ suitable times.
 
 # License
 
-Copyright © 2022 [Artsiom iG](https://github.com/rtmigo).
+Copyright © 2021 [Artsiom iG](https://github.com/rtmigo).
 Released under the [MIT License](LICENSE).
