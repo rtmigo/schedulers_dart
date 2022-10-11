@@ -11,14 +11,14 @@ class OmgError extends Error {}
 void main() {
   test("one", () async {
     final r = Random();
-    final pool = ConcurrentScheduler(concurrency: 4);
+    final pool = ParallelScheduler(concurrency: 4);
     final futures = List<Future<int>>.empty(growable: true);
     int maxEver = 0;
     for (int i = 0; i < 100; ++i) {
       futures.add(pool.run(() async {
         expect(pool.currentlyRunning, lessThanOrEqualTo(4));
         maxEver = max(maxEver, pool.currentlyRunning);
-        sleep(Duration(milliseconds: r.nextInt(50)));
+        await Future<void>.delayed(Duration(milliseconds: r.nextInt(50)));
 
         if (i%4==0) {
           throw OmgError();
@@ -49,7 +49,7 @@ void main() {
 
   test("million tasks", () async {
     // test whether too many tasks can lead to stack overflow
-    final pool = ConcurrentScheduler(concurrency: 32);
+    final pool = ParallelScheduler(concurrency: 32);
     final futures = List<Future<int>>.empty(growable: true);
     for (int i = 0; i < 1000000; ++i) {
       futures.add(pool.run(() async => i).result);

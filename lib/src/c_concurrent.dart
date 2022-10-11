@@ -4,11 +4,11 @@ import 'package:collection/collection.dart';
 
 import 'b_base.dart';
 
-class ConcurrentScheduler implements PriorityScheduler {
+class ParallelScheduler implements PriorityScheduler {
   final int concurrency;
   final _tasks = HeapPriorityQueue<PriorityTask<dynamic>>();
 
-  ConcurrentScheduler({this.concurrency = 8});
+  ParallelScheduler({this.concurrency = 8});
 
   @override
   Task<R> run<R>(final GetterFunc<R> callback, [final int priority = 0]) {

@@ -40,11 +40,29 @@ scheduler.run(()=>downloadPage('pageH'));
 scheduler.run(()=>downloadPage('pageI'));
 ```
 
+# ParallelScheduler
+
+Limits the number of tasks running at the same time. Acts like a traditional
+thread pool or process pool. But it runs regular asynchronous functions.
+
+```dart
+// Will run a maximum of three tasks at the same time.
+final scheduler = ParallelScheduler(concurrency: 3); 
+
+scheduler.run(()=>asyncDownload('pageA')); // executed immediately
+scheduler.run(()=>asyncDownload('pageB')); // executed immediately
+scheduler.run(()=>asyncDownload('pageC')); // executed immediately
+
+scheduler.run(()=>asyncDownload('pageD'));
+// task for pageD waits until some of the other pages will finish 
+// loading, then executes 
+```
+
 # TimeScheduler
 
 Runs tasks asynchronously at the specified time.
 
-``` dart
+```dart
 final scheduler = TimeScheduler();
 
 // run the function on January 1st at 17:75
