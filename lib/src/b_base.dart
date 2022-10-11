@@ -38,11 +38,8 @@ class InternalTask<R> extends Task<R> {
   @internal
   final CancelFunc? onCancel;
 
-
   @internal
   Future<void> runIfNotCanceled() async {
-
-
     if (!this._willRun) {
       return;
     }
@@ -166,15 +163,16 @@ class PriorityTask<R> extends InternalTask<R>
   }
 }
 
-/// Will throw if the task in not in queue.
 @internal
-void removeTaskFromQueue(final PriorityQueue<InternalTask<dynamic>> queue,
-    final InternalTask<dynamic> task) {
-  final s = queue.length;
-  if (!queue.remove(task)) {
-    throw ArgumentError('Task not found.');
+extension QueueExt on PriorityQueue<InternalTask<dynamic>> {
+  /// Will throw if the task in not in queue.
+  void removeOrThrow(final InternalTask<dynamic> task) {
+    final s = this.length;
+    if (!this.remove(task)) {
+      throw ArgumentError('Task not found.');
+    }
+    assert(this.length == s - 1);
   }
-  assert(queue.length == s - 1);
 }
 
 abstract class PriorityScheduler {

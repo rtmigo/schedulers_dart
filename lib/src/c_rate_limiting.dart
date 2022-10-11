@@ -37,8 +37,8 @@ class RateScheduler implements PriorityScheduler {
   @override
   Task<R> run<R>(final GetterFunc<R> callback, [final int priority = 0]) {
     PriorityTask<R>? result;
-    result = PriorityTask<R>(callback, priority,
-        onCancel: (final tsk) => removeTaskFromQueue(_queue, tsk));
+    result =
+        PriorityTask<R>(callback, priority, onCancel: _queue.removeOrThrow);
     _queue.add(result);
     this._loopAsync();
     return result;
