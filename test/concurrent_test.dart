@@ -8,7 +8,7 @@ import 'package:test/test.dart';
 //import '../bin/source/pool.dart';
 
 class OmgError extends StateError {
-  OmgError(int x) : super(x.toString());
+  OmgError(final int x) : super(x.toString());
 }
 
 void waitOrCrash(final Iterable<Future<dynamic>> items) {}
@@ -71,7 +71,7 @@ void main() {
         final pool = ParallelScheduler(concurrency: 4);
         pool.run(() => throw "Oops!");
         await Future<void>.delayed(Duration(milliseconds: 100));
-      }, (_, __) => gotError = true);
+      }, (final _, final __) => gotError = true);
       expect(gotError, true);
     });
 
@@ -81,7 +81,7 @@ void main() {
         final pool = ParallelScheduler(concurrency: 4);
         pool.run(() => 1);
         await Future<void>.delayed(Duration(milliseconds: 100));
-      }, (_, __) => gotError = true);
+      }, (final _, final __) => gotError = true);
       expect(gotError, false);
     });
   });

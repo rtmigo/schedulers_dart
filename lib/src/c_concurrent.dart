@@ -17,7 +17,8 @@ class ParallelScheduler implements PriorityScheduler {
             removeTaskFromQueue(_tasks, t));
 
     _tasks.add(newTask);
-    Future.microtask(() => _maybeRunTasks());
+    _maybeRunTasks();
+    //Future.microtask(() => _maybeRunTasks());
     return newTask;
   }
 

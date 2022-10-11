@@ -14,7 +14,7 @@ void main() {
 	test('IntervalScheduler', () async {
 		for (var i=0; i<10; ++i)
 		{
-			var stq = IntervalScheduler(delay: Duration(milliseconds: 1000%30));
+			final stq = IntervalScheduler(delay: Duration(milliseconds: 1000%30));
 
 			String txt = '';
 
@@ -22,7 +22,7 @@ void main() {
 			stq.run(() {txt+='X';}, 100);
 			stq.run(() {txt+='A';}, 200);
 			stq.run(() {txt+='Y';}, 100);
-			var oopsTask = stq.run(() {txt+='oops';}, 100);
+			final oopsTask = stq.run(() {txt+='oops';}, 100);
 			stq.run(() {txt+='B';}, 200);
 			stq.run(() {txt+='.';}, 2);
 			stq.run(() {txt+='Z';}, 100);
@@ -37,15 +37,15 @@ void main() {
 	});
 
 	test('IntervalScheduler dispose', () async {
-		var stq = IntervalScheduler(delay: Duration(milliseconds: 100));
+		final stq = IntervalScheduler(delay: Duration(milliseconds: 100));
 		int x = 0;
 		for (var i=0; i<10; ++i) {
 			stq.run(() {x++;});
 		}
 
-		Future.delayed(Duration(milliseconds: 330), () {stq.dispose();});
+		Future.delayed(Duration(milliseconds: 330), stq.dispose);
 
-		await Future.delayed(Duration(milliseconds: 600));
+		await Future<void>.delayed(Duration(milliseconds: 600));
 
 		expect(x, 3);
 	});
