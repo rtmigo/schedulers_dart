@@ -97,7 +97,7 @@ scheduler.run(()=>pushUpdate('10')); // no, we will not push 13...
 # Awaiting results
 
 Each of the schedulers allows you to wait for the result of the function 
-as a regular `Future`. You just have to wait for the `.result`.
+as a regular `Future`. You just have to `await` for the `.result`.
 
 ```dart
 final a = await download('pageA');
