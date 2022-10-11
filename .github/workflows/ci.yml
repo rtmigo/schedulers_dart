@@ -94,7 +94,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   to-pubdev:
-    needs: [to-staging, release-flag]
+    needs: [to-master, release-flag]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
