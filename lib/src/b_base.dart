@@ -29,42 +29,82 @@ abstract class Task<R> {
 }
 
 class InternalTask<R> extends Task<R> {
-  InternalTask(this._callback, {this.onCancel});
+  InternalTask(this._block, {this.onCancel});
 
-  final GetterFunc<R> _callback;
+  final GetterFunc<R> _block;
 
   /// Called when used [cancel]s the task. It helps the scheduler to remove the
   /// task from the queue, if needed.
   @internal
   final CancelFunc? onCancel;
 
+
   @internal
   Future<void> runIfNotCanceled() async {
-    if (this._willRun) {
-      try {
-        this._readyResult = await this._callback();
-        this._haveResult = true;
-        this._completer?.complete(this._readyResult);
-      } catch (e, stacktrace) {
-        if (this._completer != null) {
-          this._completer!.completeError(e, stacktrace);
-        } else {
-          rethrow;
-        }
-      } finally {
-        this._willRun = false; // todo unit test
+
+
+    if (!this._willRun) {
+      return;
+    }
+
+    try {
+      this._readyResult = await this._block();
+      assert(!this._haveResult);
+      this._haveResult = true;
+      assert(_completer == null || !_completer!.isCompleted);
+      this._completer?.complete(this._readyResult);
+    } catch (e, stacktrace) {
+      // when the _block throws error:
+      //
+      // (1) If user never asked for .result, we did not even created a
+      // Completer. The exception will be rethrown to the Zone (and maybe never
+      // handled). But we'll see it in the logs.
+      //
+      // (2a) If user asked for .result and started awaiting it, the Completer
+      // will pass error the the waiting code. So the exception may be handled
+      // by the user, if he `try { await task.result } catch { }`
+      //
+      // (2b) If the uses asked for .result, but not started awaiting it, we
+      // created the Completer and will pass the exception to it. The Completer
+      // knows that nobody awaits its future. So it throws the error to the Zone
+      // (like if we never created the completer).
+      //
+      // In all three cases the exception is "thrown" somewhere: either to
+      // the zone or to the awaiting code.
+      //
+      // In (1) and (2b) we just throw exception to the zone, with the
+      // completer, or without it. So why don't we just create Completer
+      // unconditionally and always pass results to it?
+      //
+      // That's because of canceling tasks. If user created a task, started
+      // awaiting the result (2a), and then canceled the task, then he WANTS the
+      // get a `TaskCanceled` error (instead of waiting forever). If he never
+      // asked for result (1) we will not throw `TaskCanceled` anywhere - we
+      // will cancel the task without an error. In rare case (2b) - when he
+      // asked for future result, and stored it somewhere without awaiting...
+      // He we probably get an unhandled `TaskCanceled`. To avoid this he
+      // can just avoid canceling tasks, or storing their future results...
+
+      if (this._completer != null) {
+        assert(!_completer!.isCompleted);
+        this._completer!.completeError(e, stacktrace);
+      } else {
+        assert(_completer == null);
+        rethrow;
       }
+    } finally {
+      this._willRun = false; // todo unit test
     }
   }
 
-  // this completer is only initialized if user asks for [result] future before
-  // we have the result. If the user did not ask for result, no one is waiting
-  // for the result, so we can safely cancel the task without [completeError]
+  /// this completer is only initialized if user asks for [result] future before
+  /// we have the result. If the user did not ask for result, no one is waiting
+  /// for the result, so we can safely cancel the task without [completeError]
   Completer<R>? _completer;
 
-  // when the task completes, it initializes sets the following two field. If
-  // the user reads [result] property after that, we will just return the value
-  // instead messing with Completer
+  /// when the task completes, it initializes sets the following two field. If
+  /// the user reads [result] property after that, we will just return the value
+  /// instead messing with Completer
   bool _haveResult = false;
   late R _readyResult;
 
@@ -128,14 +168,13 @@ class PriorityTask<R> extends InternalTask<R>
 
 /// Will throw if the task in not in queue.
 @internal
-void removeTaskFromQueue(
-    final PriorityQueue<InternalTask<dynamic>> queue,
+void removeTaskFromQueue(final PriorityQueue<InternalTask<dynamic>> queue,
     final InternalTask<dynamic> task) {
   final s = queue.length;
   if (!queue.remove(task)) {
     throw ArgumentError('Task not found.');
   }
-  assert (queue.length==s-1);
+  assert(queue.length == s - 1);
 }
 
 abstract class PriorityScheduler {
