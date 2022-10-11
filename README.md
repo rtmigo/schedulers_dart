@@ -5,7 +5,7 @@ load balancing, rate limiting, lazy execution.
 after object creation. In fact all the schedulers can handle 
 `run`s at random moments.*
 
-## IntervalScheduler
+# IntervalScheduler
 
 Runs tasks asynchronously, maintaining a fixed time interval between starts.
 
@@ -17,7 +17,7 @@ scheduler.run(()=>download('pageB')); // will start one second later
 scheduler.run(()=>download('pageC')); // will start two seconds later
 ```
 
-## RateScheduler
+# RateScheduler
 
 Runs no more than N tasks in a certain period of time.
 
@@ -40,7 +40,7 @@ scheduler.run(()=>download('pageH'));
 scheduler.run(()=>download('pageI'));
 ```
 
-## ParallelScheduler
+# ParallelScheduler
 
 Limits the number of tasks running at the same time. This is somewhat similar to
 using a thread pool or process pool. But it just runs 
@@ -58,7 +58,7 @@ scheduler.run(()=>asyncDownload('pageD'));
 // task for pageD will execute when some of the previous tasks finish 
 ```
 
-## TimeScheduler
+# TimeScheduler
 
 Runs tasks asynchronously at the specified time.
 
@@ -69,7 +69,7 @@ final scheduler = TimeScheduler();
 scheduler.run(() { ... }, DateTime(2020, 1, 1, 17, 45));
 ```
 
-## LazyScheduler
+# LazyScheduler
 
 Runs only the last added task and only if no new tasks have been added during 
 the time interval.
@@ -110,5 +110,5 @@ suitable times.
 
 # License
 
-Copyright © 2022 [Artsiom iG](https://github.com/rtmigo).
+Copyright © 2021 [Artsiom iG](https://github.com/rtmigo).
 Released under the [MIT License](LICENSE).
