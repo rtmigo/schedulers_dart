@@ -8,24 +8,38 @@ on:
       - '**.md'
       - '**.txt'
 
-  pull_request:
-    branches: [dev]
-    paths-ignore:
-      - 'example/*'
-      - '**.md'
-      - '**.txt'
+concurrency:
+  # subsequently queued workflow run will interrupt previous runs
+  group: '${{ github.workflow }} @ ${{ github.event.pull_request.head.label || github.head_ref || github.ref }}'
+  cancel-in-progress: true
 
 jobs:
+  release-flag:
+    if: contains(github.event.head_commit.message, '!!release')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+
+  master-flag:
+    if: contains(github.event.head_commit.message, '!!master')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+
   test:
     timeout-minutes: 9
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest] # , macos-latest
-        platform: [vm, chrome] # , macos-latest
+        os: [ubuntu-latest, windows-latest]
+        platform: [vm, node]
+        sdk: [2.18.0, stable]
+
     steps:
       - uses: actions/checkout@v2
-      - uses: dart-lang/setup-dart@v1
+      - uses: dart-lang/setup-dart@v1.3
+        with:
+          sdk: ${{ matrix.sdk }}
       - name: Install dependencies
         run: dart pub get
       - name: Run tests
@@ -35,7 +49,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: dart-lang/setup-dart@v1
+      - uses: dart-lang/setup-dart@v1.3
       - name: Install dependencies
         run: dart pub get
       - name: Analyze
@@ -56,8 +70,7 @@ jobs:
           github_token: ${{ github.token }}
 
   to-master:
-    if: github.event.head_commit.message=='publish'
-    needs: [test, analyze]
+    needs: [to-staging, master-flag]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -83,11 +96,11 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   to-pubdev:
-    needs: to-master
+    needs: [to-master, release-flag]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: dart-lang/setup-dart@v1
+      - uses: dart-lang/setup-dart@v1.3
       - name: Install dependencies
         run: dart pub get
       - name: Format

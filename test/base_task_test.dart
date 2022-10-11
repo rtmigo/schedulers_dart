@@ -1,9 +1,9 @@
-// SPDX-FileCopyrightText: (c) 2021 Artёm IG <github.com/rtmigo>
+// SPDX-FileCopyrightText: (c) 2021 Artsiom iG <github.com/rtmigo>
 // SPDX-License-Identifier: MIT
 
 import 'dart:core';
 
-import 'package:schedulers/src/20_base.dart';
+import 'package:schedulers/src/b_base.dart';
 import 'package:test/test.dart';
 
 void main() {
