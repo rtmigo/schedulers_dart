@@ -42,8 +42,9 @@ scheduler.run(()=>downloadPage('pageI'));
 
 # ParallelScheduler
 
-Limits the number of tasks running at the same time. Acts like a traditional
-thread pool or process pool. But it runs regular asynchronous functions.
+Limits the number of tasks running at the same time. This is somewhat similar to
+using a thread pool or process pool. But it just runs 
+`async` functions.
 
 ```dart
 // Will run a maximum of three tasks at the same time.
@@ -54,7 +55,7 @@ scheduler.run(()=>asyncDownload('pageB')); // executed immediately
 scheduler.run(()=>asyncDownload('pageC')); // executed immediately
 
 scheduler.run(()=>asyncDownload('pageD'));
-// task for pageD waits until some of the other pages will finish 
+// task for pageD waits until any of the other pages finishes 
 // loading, then executes 
 ```
 
