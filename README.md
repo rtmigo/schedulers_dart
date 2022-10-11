@@ -77,11 +77,11 @@ the time interval.
 ``` dart
 final scheduler = LazyScheduler(latency: Duration(seconds: 1));
 
-scheduler.run(()=>pushUpdate('1')); // maybe we will push 1
-scheduler.run(()=>pushUpdate('1+1')); // no we will push 1+1
-scheduler.run(()=>pushUpdate('1+1-1')); // no we will push 1+1-1
-scheduler.run(()=>pushUpdate('1')); // it's good we're so lazy
-scheduler.run(()=>pushUpdate('777')); // maybe we will push this
+scheduler.run(() => pushUpdate('1')); // maybe we will push 1
+scheduler.run(() => pushUpdate('1+1')); // no we will push 1+1
+scheduler.run(() => pushUpdate('1+1-1')); // no we will push 1+1-1
+scheduler.run(() => pushUpdate('1')); // it's good we're so lazy
+scheduler.run(() => pushUpdate('777')); // maybe we will push this
 ```
 
 And one second later the `scheduler` runs `pushUpdate('777')`. Other tasks 

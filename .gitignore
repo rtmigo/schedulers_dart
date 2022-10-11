@@ -2,8 +2,8 @@
 **_nogit/
 shell_nogit/
 
-example/
-!example/lib/example.dart
+#example/
+#!example/lib/example.dart
 
 # Miscellaneous
 *.class
