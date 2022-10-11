@@ -16,8 +16,7 @@ import 'b_base.dart';
 class IntervalScheduler implements PriorityScheduler {
   IntervalScheduler({this.delay = const Duration(seconds: 1)});
 
-  final PriorityQueue<PriorityTask<dynamic>> _tasks =
-      HeapPriorityQueue<PriorityTask<dynamic>>();
+  final _tasks = HeapPriorityQueue<PriorityTask<dynamic>>();
   final Duration delay;
   bool _scheduled = false;
 
@@ -40,11 +39,8 @@ class IntervalScheduler implements PriorityScheduler {
     }
 
     final newTask = PriorityTask(callback, priority,
-        onCancel: (final InternalTask<R> canceledTask) {
-      if (!this._tasks.remove(canceledTask as PriorityTask<dynamic>)) {
-        throw ArgumentError('Task not found.');
-      }
-    });
+        onCancel: (final InternalTask<dynamic> t) =>
+            removeTaskFromQueue(_tasks, t));
 
     _tasks.add(newTask);
     this._runRunnerLater();

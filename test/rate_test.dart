@@ -61,7 +61,7 @@ void main() {
       c++;
     }
 
-    var tasks = [];
+    final List<void Function()> tasks = [];
     for (int i = 0; i < 4; ++i) {
       tasks.add(taskA);
     }
@@ -74,11 +74,11 @@ void main() {
 
     tasks.shuffle();
 
-    for (var t in tasks) {
+    for (final t in tasks) {
       scheduler.run(t);
     }
 
-    await Future.delayed(Duration(milliseconds: 500 * F));
+    await Future<void>.delayed(Duration(milliseconds: 500 * F));
 
     expect(a, 4);
     expect(b, 3);

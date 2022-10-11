@@ -3,12 +3,15 @@
 
 import 'dart:async';
 
+import 'package:collection/collection.dart';
 import 'package:meta/meta.dart';
 
 import 'a_unlimited.dart';
 
-typedef CancelFunc<R> = void Function(InternalTask<R>);
 typedef GetterFunc<R> = FutureOr<R> Function();
+
+@internal
+typedef CancelFunc = void Function(InternalTask<dynamic>);
 
 class TaskCanceled {}
 
@@ -33,7 +36,7 @@ class InternalTask<R> extends Task<R> {
   /// Called when used [cancel]s the task. It helps the scheduler to remove the
   /// task from the queue, if needed.
   @internal
-  final CancelFunc<R>? onCancel;
+  final CancelFunc? onCancel;
 
   @internal
   Future<void> runIfNotCanceled() async {
@@ -103,7 +106,7 @@ class PriorityTask<R> extends InternalTask<R>
   static Unlimited _idGenerator = Unlimited();
 
   PriorityTask(final GetterFunc<R> callback, this.priority,
-      {final CancelFunc<R>? onCancel})
+      {final CancelFunc? onCancel})
       : super(callback, onCancel: onCancel);
 
   final int priority;
@@ -121,6 +124,18 @@ class PriorityTask<R> extends InternalTask<R>
 
     return x;
   }
+}
+
+/// Will throw if the task in not in queue.
+@internal
+void removeTaskFromQueue(
+    final PriorityQueue<InternalTask<dynamic>> queue,
+    final InternalTask<dynamic> task) {
+  final s = queue.length;
+  if (!queue.remove(task)) {
+    throw ArgumentError('Task not found.');
+  }
+  assert (queue.length==s-1);
 }
 
 abstract class PriorityScheduler {
