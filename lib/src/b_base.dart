@@ -8,7 +8,7 @@ import 'package:meta/meta.dart';
 import 'a_unlimited.dart';
 
 typedef CancelFunc<R> = void Function(InternalTask<R>);
-typedef GetterFunc<R> = R Function();
+typedef GetterFunc<R> = FutureOr<R> Function();
 
 class TaskCanceled {}
 
@@ -36,10 +36,10 @@ class InternalTask<R> extends Task<R> {
   final CancelFunc<R>? onCancel;
 
   @internal
-  void runIfNotCanceled() {
+  Future<void> runIfNotCanceled() async {
     if (this._willRun) {
       try {
-        this._readyResult = this._callback();
+        this._readyResult = await this._callback();
         this._haveResult = true;
         this._completer?.complete(this._readyResult);
       } catch (e, stacktrace) {
