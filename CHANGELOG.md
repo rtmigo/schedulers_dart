@@ -1,4 +1,4 @@
-# 1.0.0 
+# 1.0.1 
 
 - Added `ParallelScheduler`
 - Results of tasks are now `await`ed by the schedulers
