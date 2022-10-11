@@ -77,11 +77,11 @@ the time interval.
 ``` dart
 final scheduler = LazyScheduler(latency: Duration(seconds: 1));
 
-scheduler.run(()=>pushUpdate('1')); // maybe we will push 1
-scheduler.run(()=>pushUpdate('1+1')); // no we will push 1+1
-scheduler.run(()=>pushUpdate('1+1-1')); // no we will push 1+1-1
-scheduler.run(()=>pushUpdate('1')); // it's good we're so lazy
-scheduler.run(()=>pushUpdate('777')); // maybe we will push this
+scheduler.run(() => pushUpdate('1')); // maybe we will push 1
+scheduler.run(() => pushUpdate('1+1')); // no we will push 1+1
+scheduler.run(() => pushUpdate('1+1-1')); // no we will push 1+1-1
+scheduler.run(() => pushUpdate('1')); // it's good we're so lazy
+scheduler.run(() => pushUpdate('777')); // maybe we will push this
 ```
 
 And one second later the `scheduler` runs `pushUpdate('777')`. Other tasks 
@@ -97,7 +97,7 @@ scheduler.run(()=>pushUpdate('10')); // no, we will not push 13...
 # Awaiting results
 
 Each of the schedulers allows you to wait for the result of the function 
-as a regular `Future`. You just have to wait for the `.result`.
+as a regular `Future`. You just have to `await` for the `.result`.
 
 ```dart
 final a = await download('pageA');
