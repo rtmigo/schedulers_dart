@@ -19,14 +19,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
-    timeout-minutes: 5
 
   master-flag:
     if: contains(github.event.head_commit.message, '!!master')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
-    timeout-minutes: 5
 
   test:
     timeout-minutes: 9
@@ -38,7 +36,7 @@ jobs:
         sdk: [2.18.0, stable]
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v2
       - uses: dart-lang/setup-dart@v1.3
         with:
           sdk: ${{ matrix.sdk }}
@@ -50,7 +48,7 @@ jobs:
   analyze:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v2
       - uses: dart-lang/setup-dart@v1.3
       - name: Install dependencies
         run: dart pub get
@@ -58,7 +56,6 @@ jobs:
         run: dart analyze --fatal-infos
       - name: Publish (dry run)
         run: dart pub publish --dry-run
-    timeout-minutes: 5
 
   to-staging:
     needs: [test, analyze]
@@ -71,13 +68,12 @@ jobs:
           type: now
           target_branch: staging
           github_token: ${{ github.token }}
-    timeout-minutes: 5
 
   to-master:
     needs: [to-staging, master-flag]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v2
 
       # UPDATE MASTER BRANCH
 
@@ -98,13 +94,12 @@ jobs:
           tag_name: ${{ env.PKGVER }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    timeout-minutes: 5
 
   to-pubdev:
     needs: [to-master, release-flag]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v2
       - uses: dart-lang/setup-dart@v1.3
       - name: Install dependencies
         run: dart pub get
@@ -130,4 +125,3 @@ jobs:
           EOF
       - name: Publish package
         run: dart pub publish --force
-    timeout-minutes: 5
