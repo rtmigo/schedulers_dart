@@ -142,9 +142,8 @@ class PriorityTask<R> extends InternalTask<R>
     implements Comparable<PriorityTask<R>> {
   static Unlimited _idGenerator = Unlimited();
 
-  PriorityTask(final GetterFunc<R> callback, this.priority,
-      {final CancelFunc? onCancel})
-      : super(callback, onCancel: onCancel);
+  PriorityTask(super.callback, this.priority,
+      {super.onCancel});
 
   final int priority;
   final id = (PriorityTask._idGenerator = PriorityTask._idGenerator.next());
